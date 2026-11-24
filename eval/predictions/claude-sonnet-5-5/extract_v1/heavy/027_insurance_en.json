@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "en",
+    "counterparty": "Contoso Insurance plc",
+    "recipient": "John Sample",
+    "document_number": "HC5746166",
+    "issue_date": "2026-08-01",
+    "currency": "EUR",
+    "total_amount": 70000.0,
+    "due_date": null,
+    "valid_from": "2026-08-15",
+    "valid_until": "2027-08-14",
+    "confidence": 0.55
+  },
+  "usage": {
+    "input_tokens": 3259,
+    "output_tokens": 799
+  },
+  "latency_s": 6.1231138706207275,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

@@ -1,0 +1,28 @@
+{
+  "doc_type": "receipt",
+  "language": "pl",
+  "counterparty": "Market Testowy s.c.",
+  "recipient": null,
+  "document_number": null,
+  "issue_date": "2026-02-07",
+  "currency": "PLN",
+  "total_amount": 113.06,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "024_receipt_pl.pdf",
+    "layout": "receipt",
+    "noisy": true,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "currency_symbol",
+      "cash_change",
+      "no_number",
+      "stamp"
+    ],
+    "sha256": "4a6abb62bd55d778ef930437179999693b79e8fa83cec5371ee1b4b16ca342a1"
+  }
+}

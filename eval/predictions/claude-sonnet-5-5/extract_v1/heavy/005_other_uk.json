@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "other",
+    "language": "uk",
+    "counterparty": "ТОВ «Офіс-Постач Тест»",
+    "recipient": null,
+    "document_number": "82",
+    "issue_date": "2025-12-07",
+    "currency": null,
+    "total_amount": null,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.75
+  },
+  "usage": {
+    "input_tokens": 3259,
+    "output_tokens": 481
+  },
+  "latency_s": 3.9886698722839355,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

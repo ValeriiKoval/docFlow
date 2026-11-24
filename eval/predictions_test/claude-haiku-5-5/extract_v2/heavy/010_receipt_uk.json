@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "uk",
+    "counterparty": null,
+    "recipient": null,
+    "document_number": null,
+    "issue_date": null,
+    "currency": "UAH",
+    "total_amount": 883.58,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.3
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 630
+  },
+  "latency_s": 6.019518852233887,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

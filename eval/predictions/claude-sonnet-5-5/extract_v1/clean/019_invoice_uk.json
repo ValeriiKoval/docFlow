@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "uk",
+    "counterparty": "ТОВ «Офіс-Постач Тест»",
+    "recipient": "Марія Прикладна",
+    "document_number": "692/2026",
+    "issue_date": "2026-08-22",
+    "currency": "UAH",
+    "total_amount": 5749.19,
+    "due_date": "2026-09-21",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.97
+  },
+  "usage": {
+    "input_tokens": 3656,
+    "output_tokens": 352
+  },
+  "latency_s": 2.4937098026275635,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

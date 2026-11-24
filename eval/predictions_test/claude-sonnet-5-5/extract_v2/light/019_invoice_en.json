@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "en",
+    "counterparty": "Adventure Works Ltd",
+    "recipient": "Sample & Co Bookkeeping",
+    "document_number": "E486/2026",
+    "issue_date": "2026-06-23",
+    "currency": "GBP",
+    "total_amount": 493.32,
+    "due_date": "2026-07-23",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 348
+  },
+  "latency_s": 3.053133726119995,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

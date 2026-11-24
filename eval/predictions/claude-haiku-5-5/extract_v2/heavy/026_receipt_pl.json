@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "pl",
+    "counterparty": "Market Tęczowy s.c.",
+    "recipient": null,
+    "document_number": null,
+    "issue_date": null,
+    "currency": "PLN",
+    "total_amount": 23.78,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.3
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 581
+  },
+  "latency_s": 4.298596143722534,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

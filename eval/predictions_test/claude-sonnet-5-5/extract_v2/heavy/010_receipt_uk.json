@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "uk",
+    "counterparty": "Магазин «Канцтовари Приятель»",
+    "recipient": null,
+    "document_number": "332/2",
+    "issue_date": "2026-04-09",
+    "currency": "UAH",
+    "total_amount": 583.58,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.3
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 670
+  },
+  "latency_s": 5.652386665344238,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

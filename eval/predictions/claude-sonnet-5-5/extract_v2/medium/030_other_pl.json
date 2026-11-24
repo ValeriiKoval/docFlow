@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "other",
+    "language": "pl",
+    "counterparty": "Delta Serwis Sp. z o.o.",
+    "recipient": "Kancelaria Przykład",
+    "document_number": "46/2025",
+    "issue_date": "2025-12-20",
+    "currency": null,
+    "total_amount": null,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.9
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 340
+  },
+  "latency_s": 3.4971559047698975,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

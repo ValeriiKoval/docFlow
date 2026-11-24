@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "pl",
+    "counterparty": "Biuro Rachunkowe Sigma",
+    "recipient": "Biuro Testowe Sp. z o.o.",
+    "document_number": "165/04/2025",
+    "issue_date": "2025-04-02",
+    "currency": "PLN",
+    "total_amount": 7250.11,
+    "due_date": "2025-04-16",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3271,
+    "output_tokens": 360
+  },
+  "latency_s": 2.803440809249878,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

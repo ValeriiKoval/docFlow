@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "uk",
+    "counterparty": "ТОВ «Продмаркет Тест»",
+    "recipient": null,
+    "document_number": null,
+    "issue_date": "2025-01-30",
+    "currency": "UAH",
+    "total_amount": 780.86,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 422
+  },
+  "latency_s": 4.897039890289307,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

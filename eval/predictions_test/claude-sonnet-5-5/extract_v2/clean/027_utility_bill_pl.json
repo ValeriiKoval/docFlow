@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "pl",
+    "counterparty": "Wodociągi Przykładowe Sp. z o.o.",
+    "recipient": "Anna Przykładowa",
+    "document_number": "2026-10-452467",
+    "issue_date": "2026-10-08",
+    "currency": "PLN",
+    "total_amount": 853.76,
+    "due_date": "2026-10-18",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.96
+  },
+  "usage": {
+    "input_tokens": 4392,
+    "output_tokens": 360
+  },
+  "latency_s": 2.8316650390625,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

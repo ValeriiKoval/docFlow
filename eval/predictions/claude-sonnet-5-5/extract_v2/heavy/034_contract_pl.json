@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "pl",
+    "counterparty": "Gamma Telekom Sp. z o.o.",
+    "recipient": "Kancelaria Przykład",
+    "document_number": null,
+    "issue_date": "2026-12-28",
+    "currency": "PLN",
+    "total_amount": 10339.68,
+    "due_date": null,
+    "valid_from": "2026-12-28",
+    "valid_until": "2027-12-27",
+    "confidence": 0.35
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 354
+  },
+  "latency_s": 3.241741180419922,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

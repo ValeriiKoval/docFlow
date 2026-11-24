@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "en",
+    "counterparty": "Acme Office Supplies",
+    "recipient": null,
+    "document_number": "38784",
+    "issue_date": "2025-04-03",
+    "currency": "EUR",
+    "total_amount": 65.64,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.96
+  },
+  "usage": {
+    "input_tokens": 4177,
+    "output_tokens": 382
+  },
+  "latency_s": 2.923717737197876,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

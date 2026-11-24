@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "uk",
+    "counterparty": "ТОВ «Продмаркет Тест»",
+    "recipient": null,
+    "document_number": "324-11",
+    "issue_date": null,
+    "currency": "UAH",
+    "total_amount": 2595.73,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.35
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 900
+  },
+  "latency_s": 5.107724666595459,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

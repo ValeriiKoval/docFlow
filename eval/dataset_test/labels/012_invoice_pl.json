@@ -1,0 +1,26 @@
+{
+  "doc_type": "invoice",
+  "language": "pl",
+  "counterparty": "Delta Serwis Sp. z o.o.",
+  "recipient": "Jan Testowy",
+  "document_number": "49/11/2025",
+  "issue_date": "2025-11-29",
+  "currency": "PLN",
+  "total_amount": 1982.75,
+  "due_date": "2025-12-29",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "012_invoice_pl.pdf",
+    "layout": "boxed",
+    "noisy": true,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "textual_date",
+      "supply_date",
+      "stamp"
+    ],
+    "sha256": "5515edc45cb1d2cdab2ee29e273aea79b95678c06608ddef84c003b5803b64d2"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "pl",
+    "counterparty": "Omega TU S.A.",
+    "recipient": "Piotr Wzorcowy",
+    "document_number": "6415345180",
+    "issue_date": "2026-08-03",
+    "currency": "PLN",
+    "total_amount": 1626.49,
+    "due_date": null,
+    "valid_from": "2026-06-04",
+    "valid_until": "2027-06-03",
+    "confidence": 0.7
+  },
+  "usage": {
+    "input_tokens": 3284,
+    "output_tokens": 351
+  },
+  "latency_s": 4.606088161468506,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

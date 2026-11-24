@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "en",
+    "counterparty": "Tailspin Water plc",
+    "recipient": "John Sample",
+    "document_number": "2026-07-846385",
+    "issue_date": "2026-07-15",
+    "currency": "EUR",
+    "total_amount": 156.61,
+    "due_date": "2026-08-07",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.5
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 788
+  },
+  "latency_s": 5.7426440715789795,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

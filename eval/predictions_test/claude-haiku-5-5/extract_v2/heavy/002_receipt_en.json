@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "en",
+    "counterparty": "Active Office Supplies",
+    "recipient": null,
+    "document_number": null,
+    "issue_date": null,
+    "currency": "GBP",
+    "total_amount": 17.52,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.3
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 736
+  },
+  "latency_s": 5.253786563873291,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

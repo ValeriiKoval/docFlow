@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "en",
+    "counterparty": "Proseware Consulting",
+    "recipient": "Jane Example",
+    "document_number": "SRV-2026-983",
+    "issue_date": "2026-06-21",
+    "currency": "USD",
+    "total_amount": 14743.68,
+    "due_date": null,
+    "valid_from": "2026-06-21",
+    "valid_until": "2027-06-20",
+    "confidence": 0.96
+  },
+  "usage": {
+    "input_tokens": 3554,
+    "output_tokens": 345
+  },
+  "latency_s": 2.3712120056152344,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

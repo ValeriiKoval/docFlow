@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "uk",
+    "counterparty": "ТОВ «Дніпро-Сервіс»",
+    "recipient": "ФОП Тестовий О. В.",
+    "document_number": "50/2025",
+    "issue_date": "2025-01-26",
+    "currency": "UAH",
+    "total_amount": 11922.96,
+    "due_date": null,
+    "valid_from": "2025-01-26",
+    "valid_until": "2027-01-25",
+    "confidence": 0.88
+  },
+  "usage": {
+    "input_tokens": 3902,
+    "output_tokens": 361
+  },
+  "latency_s": 4.191867351531982,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

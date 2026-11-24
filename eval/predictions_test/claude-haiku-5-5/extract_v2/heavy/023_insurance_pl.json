@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "pl",
+    "counterparty": "Omega TU S.A.",
+    "recipient": "Jan Testowy",
+    "document_number": "3668999204",
+    "issue_date": "2025-04-07",
+    "currency": "PLN",
+    "total_amount": 398.32,
+    "due_date": null,
+    "valid_from": "2025-04-07",
+    "valid_until": "2026-04-06",
+    "confidence": 0.5
+  },
+  "usage": {
+    "input_tokens": 3902,
+    "output_tokens": 964
+  },
+  "latency_s": 6.486548662185669,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

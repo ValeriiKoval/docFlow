@@ -1,0 +1,25 @@
+{
+  "doc_type": "insurance",
+  "language": "uk",
+  "counterparty": "ПрАТ «СК Тестова Гарантія»",
+  "recipient": "Олег Тестовий",
+  "document_number": "АН-7004608",
+  "issue_date": "2026-07-08",
+  "currency": "USD",
+  "total_amount": 2033.22,
+  "due_date": null,
+  "valid_from": "2026-07-22",
+  "valid_until": "2027-07-21",
+  "_meta": {
+    "file": "025_insurance_uk.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "sum_insured",
+      "textual_date",
+      "currency_symbol",
+      "issue_before_start"
+    ],
+    "sha256": "18d481b9d58b084159e37ee2ee6bd773083e3aa240fe1ceecec4fbc676796085"
+  }
+}

@@ -1,0 +1,51 @@
+file,doc_type,language,layout,noisy,tags
+000_utility_bill_pl.pdf,utility_bill,pl,boxed,False,account_number billing_period iban currency_symbol previous_balance
+001_insurance_en.pdf,insurance,en,narrative,False,sum_insured textual_date currency_symbol issue_before_start
+002_receipt_en.pdf,receipt,en,receipt,True,no_recipient vat_included fiscal_ids currency_symbol card stamp
+003_insurance_uk.pdf,insurance,uk,narrative,True,sum_insured installments issue_before_start stamp
+004_insurance_pl.pdf,insurance,pl,narrative,False,sum_insured installments issue_before_start
+005_contract_pl.pdf,contract,pl,narrative,False,monthly_vs_total narrative textual_date currency_symbol no_number
+006_contract_pl.pdf,contract,pl,narrative,False,monthly_vs_total narrative textual_date currency_symbol
+007_utility_bill_uk.pdf,utility_bill,uk,classic,False,account_number billing_period iban
+008_receipt_uk.pdf,receipt,uk,receipt,False,no_recipient vat_included fiscal_ids currency_symbol card no_number
+009_invoice_pl.pdf,invoice,pl,boxed,True,vat_breakdown iban textual_date currency_symbol supply_date stamp
+010_receipt_uk.pdf,receipt,uk,receipt,False,no_recipient vat_included fiscal_ids card
+011_insurance_pl.pdf,insurance,pl,boxed,False,sum_insured currency_symbol installments
+012_invoice_pl.pdf,invoice,pl,boxed,True,vat_breakdown iban textual_date supply_date stamp
+013_other_pl.pdf,other,pl,narrative,True,other_letter textual_date stamp
+014_contract_en.pdf,contract,en,narrative,False,monthly_vs_total narrative start_after_signing
+015_invoice_en.pdf,invoice,en,classic,False,vat_breakdown iban
+016_other_uk.pdf,other,uk,narrative,False,other_certificate currency_symbol
+017_insurance_uk.pdf,insurance,uk,narrative,False,sum_insured issue_before_start
+018_contract_en.pdf,contract,en,narrative,False,monthly_vs_total narrative currency_symbol
+019_invoice_en.pdf,invoice,en,classic,False,vat_breakdown iban currency_symbol supply_date
+020_contract_uk.pdf,contract,uk,narrative,False,monthly_vs_total narrative currency_symbol
+021_utility_bill_en.pdf,utility_bill,en,classic,True,account_number billing_period iban textual_date currency_symbol previous_balance stamp
+022_contract_pl.pdf,contract,pl,narrative,False,monthly_vs_total narrative
+023_insurance_pl.pdf,insurance,pl,boxed,True,sum_insured currency_symbol stamp
+024_receipt_pl.pdf,receipt,pl,receipt,True,no_recipient vat_included fiscal_ids currency_symbol cash_change no_number stamp
+025_insurance_uk.pdf,insurance,uk,boxed,False,sum_insured textual_date currency_symbol issue_before_start
+026_receipt_uk.pdf,receipt,uk,receipt,False,no_recipient vat_included fiscal_ids cash_change no_number
+027_utility_bill_pl.pdf,utility_bill,pl,classic,True,account_number billing_period iban previous_balance stamp
+028_invoice_uk.pdf,invoice,uk,classic,False,vat_breakdown iban paid_no_due supply_date
+029_other_uk.pdf,other,uk,narrative,False,other_certificate
+030_contract_uk.pdf,contract,uk,narrative,False,monthly_vs_total narrative start_after_signing
+031_other_pl.pdf,other,pl,narrative,True,other_letter textual_date stamp
+032_invoice_en.pdf,invoice,en,classic,False,vat_breakdown iban supply_date
+033_invoice_uk.pdf,invoice,uk,classic,False,vat_breakdown iban
+034_contract_uk.pdf,contract,uk,narrative,False,monthly_vs_total narrative start_after_signing
+035_receipt_pl.pdf,receipt,pl,receipt,False,no_recipient vat_included fiscal_ids currency_symbol card
+036_receipt_pl.pdf,receipt,pl,receipt,True,no_recipient vat_included fiscal_ids currency_symbol card stamp
+037_utility_bill_pl.pdf,utility_bill,pl,boxed,False,account_number billing_period iban textual_date
+038_utility_bill_uk.pdf,utility_bill,uk,boxed,False,account_number billing_period iban
+039_insurance_en.pdf,insurance,en,boxed,False,sum_insured
+040_receipt_en.pdf,receipt,en,receipt,True,no_recipient vat_included fiscal_ids currency_symbol card stamp
+041_utility_bill_uk.pdf,utility_bill,uk,boxed,False,account_number billing_period iban
+042_utility_bill_en.pdf,utility_bill,en,boxed,False,account_number billing_period iban textual_date currency_symbol
+043_contract_en.pdf,contract,en,narrative,True,monthly_vs_total narrative textual_date currency_symbol stamp
+044_invoice_uk.pdf,invoice,uk,classic,False,vat_breakdown iban supply_date
+045_utility_bill_en.pdf,utility_bill,en,boxed,False,account_number billing_period iban previous_balance
+046_other_en.pdf,other,en,narrative,False,other_minutes textual_date currency_symbol
+047_receipt_en.pdf,receipt,en,receipt,True,no_recipient vat_included fiscal_ids cash_change no_number stamp
+048_insurance_en.pdf,insurance,en,boxed,True,sum_insured currency_symbol issue_before_start stamp
+049_invoice_pl.pdf,invoice,pl,classic,True,vat_breakdown iban currency_symbol stamp

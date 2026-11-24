@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "pl",
+    "counterparty": "Biuro Rachunkowe Sigma",
+    "recipient": "Piotr Wiśniewski",
+    "document_number": "5/2025",
+    "issue_date": "2025-06-07",
+    "currency": null,
+    "total_amount": null,
+    "due_date": null,
+    "valid_from": "2025-06-07",
+    "valid_until": null,
+    "confidence": 0.35
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 1187
+  },
+  "latency_s": 9.02676796913147,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

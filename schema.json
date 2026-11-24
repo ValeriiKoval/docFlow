@@ -15,7 +15,7 @@
     "document_number": {"type": ["string", "null"], "description": "Document number exactly as printed, without the word 'No'/'№'."},
     "issue_date": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "ISO date YYYY-MM-DD."},
     "currency": {"type": ["string", "null"], "pattern": "^[A-Z]{3}$", "description": "ISO 4217 code."},
-    "total_amount": {"type": ["number", "null"], "description": "Final total to pay / insured / contract value, as a plain number with '.' decimal separator."},
+    "total_amount": {"type": ["number", "null"], "description": "Final total: invoice gross, utility amount due, receipt total paid, insurance premium (not sum insured), contract total value. Plain number, '.' decimal separator."},
     "due_date": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "Payment deadline. null if not stated."},
     "valid_from": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "Start of validity (policy, contract). null otherwise."},
     "valid_until": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "End of validity (policy, contract). null otherwise."},

@@ -1,0 +1,28 @@
+{
+  "doc_type": "utility_bill",
+  "language": "en",
+  "counterparty": "Tailspin Water plc",
+  "recipient": "Jane Example",
+  "document_number": "892913727",
+  "issue_date": "2025-02-04",
+  "currency": "GBP",
+  "total_amount": 93.44,
+  "due_date": "2025-02-24",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "021_utility_bill_en.pdf",
+    "layout": "classic",
+    "noisy": true,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "textual_date",
+      "currency_symbol",
+      "previous_balance",
+      "stamp"
+    ],
+    "sha256": "700689ae351dee456d4a973aa7f68c2ab02e309d8d32d9ccd73039e43fe70020"
+  }
+}

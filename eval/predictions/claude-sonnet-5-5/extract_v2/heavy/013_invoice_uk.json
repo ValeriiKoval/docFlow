@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "uk",
+    "counterparty": "ТОВ «Лімбат»",
+    "recipient": "ФОП Тестовий О. В.",
+    "document_number": "246/2026",
+    "issue_date": "2026-10-05",
+    "currency": "UAH",
+    "total_amount": 4930.27,
+    "due_date": "2026-10-17",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.3
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 351
+  },
+  "latency_s": 3.5334346294403076,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

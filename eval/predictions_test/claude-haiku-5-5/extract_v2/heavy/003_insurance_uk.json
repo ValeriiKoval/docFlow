@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "uk",
+    "counterparty": "ПрАТ «СК Тестова Гарантія»",
+    "recipient": "Марія Прикладна",
+    "document_number": "595.2026.1335",
+    "issue_date": "2026-10-26",
+    "currency": "UAH",
+    "total_amount": 2005.63,
+    "due_date": null,
+    "valid_from": "2026-11-02",
+    "valid_until": "2027-11-01",
+    "confidence": 0.5
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 936
+  },
+  "latency_s": 7.555026292800903,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

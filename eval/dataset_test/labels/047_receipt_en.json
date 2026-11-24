@@ -1,0 +1,27 @@
+{
+  "doc_type": "receipt",
+  "language": "en",
+  "counterparty": "Wingtip Grocers",
+  "recipient": null,
+  "document_number": null,
+  "issue_date": "2025-08-14",
+  "currency": "GBP",
+  "total_amount": 57.29,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "047_receipt_en.pdf",
+    "layout": "receipt",
+    "noisy": true,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "cash_change",
+      "no_number",
+      "stamp"
+    ],
+    "sha256": "12f451274eda71e580c4015539c6d81ff413f0131b5ae01fa084ff7c8d98a115"
+  }
+}

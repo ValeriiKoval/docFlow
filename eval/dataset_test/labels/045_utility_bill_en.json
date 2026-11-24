@@ -1,0 +1,25 @@
+{
+  "doc_type": "utility_bill",
+  "language": "en",
+  "counterparty": "Northwind Utilities Ltd",
+  "recipient": "Alex Specimen",
+  "document_number": "847082107",
+  "issue_date": "2026-06-09",
+  "currency": "GBP",
+  "total_amount": 165.73,
+  "due_date": "2026-06-23",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "045_utility_bill_en.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "previous_balance"
+    ],
+    "sha256": "166df3a5aba5b9b3ce449b7795faa23a0dee63aea0a4d9d9d319488ec8414ff2"
+  }
+}

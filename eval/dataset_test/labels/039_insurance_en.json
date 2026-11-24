@@ -1,0 +1,22 @@
+{
+  "doc_type": "insurance",
+  "language": "en",
+  "counterparty": "Contoso Insurance plc",
+  "recipient": "John Sample",
+  "document_number": "POL-4247-8606",
+  "issue_date": "2025-04-25",
+  "currency": "USD",
+  "total_amount": 2249.12,
+  "due_date": null,
+  "valid_from": "2025-04-25",
+  "valid_until": "2026-04-24",
+  "_meta": {
+    "file": "039_insurance_en.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "sum_insured"
+    ],
+    "sha256": "ced595e76288cb6e300e2821dbda631f9667780a46ddf8de72539893a8c5b8bf"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "doc_type": "utility_bill",
+  "language": "uk",
+  "counterparty": "КП «Міськводоканал-Тест»",
+  "recipient": "Олег Тестовий",
+  "document_number": "2026-06-485872",
+  "issue_date": "2026-06-12",
+  "currency": "UAH",
+  "total_amount": 4858.61,
+  "due_date": "2026-06-22",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "007_utility_bill_uk.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban"
+    ],
+    "sha256": "b0536a3367e6c5621c7141714ca125f61b563f0efc4a26cab4b19b8b27322e14"
+  }
+}

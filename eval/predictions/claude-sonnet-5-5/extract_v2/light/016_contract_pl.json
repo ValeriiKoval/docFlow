@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "pl",
+    "counterparty": "Kappa IT s.c.",
+    "recipient": "Kancelaria Przykład",
+    "document_number": null,
+    "issue_date": "2025-11-26",
+    "currency": "PLN",
+    "total_amount": 22800.72,
+    "due_date": null,
+    "valid_from": "2025-12-01",
+    "valid_until": "2026-11-30",
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 347
+  },
+  "latency_s": 2.8828415870666504,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "uk",
+    "counterparty": "КП «Міськводоканал-Тест»",
+    "recipient": "Марія Прикладна",
+    "document_number": "958287383",
+    "issue_date": "2026-01-01",
+    "currency": "UAH",
+    "total_amount": 6128.3,
+    "due_date": "2026-01-11",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3649,
+    "output_tokens": 350
+  },
+  "latency_s": 2.407510280609131,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

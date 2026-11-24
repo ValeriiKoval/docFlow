@@ -1,0 +1,23 @@
+{
+  "doc_type": "other",
+  "language": "uk",
+  "counterparty": "ТОВ «Офіс-Постач Тест»",
+  "recipient": "Марія Прикладна",
+  "document_number": "8",
+  "issue_date": "2025-08-22",
+  "currency": null,
+  "total_amount": null,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "016_other_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "other_certificate",
+      "currency_symbol"
+    ],
+    "sha256": "a8849054fae07b527aa6a04cf901181db14e401eb97debd635be25905965f2b2"
+  }
+}

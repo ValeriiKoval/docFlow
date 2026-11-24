@@ -1,0 +1,27 @@
+{
+  "doc_type": "receipt",
+  "language": "uk",
+  "counterparty": "Магазин «Канцтовари-Приклад»",
+  "recipient": null,
+  "document_number": null,
+  "issue_date": "2026-08-04",
+  "currency": "UAH",
+  "total_amount": 747.41,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "008_receipt_uk.pdf",
+    "layout": "receipt",
+    "noisy": false,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "currency_symbol",
+      "card",
+      "no_number"
+    ],
+    "sha256": "e646f288221317e678fb3019948b2ef9ce134e2e86e6582b1fe97b42d30baa37"
+  }
+}

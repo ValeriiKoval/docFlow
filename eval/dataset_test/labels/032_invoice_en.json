@@ -1,0 +1,24 @@
+{
+  "doc_type": "invoice",
+  "language": "en",
+  "counterparty": "Proseware Consulting",
+  "recipient": "Sample & Co Bookkeeping",
+  "document_number": "E514/2026",
+  "issue_date": "2026-06-26",
+  "currency": "EUR",
+  "total_amount": 7578.02,
+  "due_date": "2026-07-03",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "032_invoice_en.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "supply_date"
+    ],
+    "sha256": "11ab1608b58764ce971c6970f3631f1994df93c3e48b61c7ea84890e9117f9ed"
+  }
+}

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Evaluate extraction predictions against ground-truth labels.
 
-    python eval/eval.py --pred eval/predictions/<model>          # -> eval/results/<model>.md
-    python eval/eval.py --pred eval/predictions/<model> --price-in 3 --price-out 15   # USD per 1M tokens, optional
+    python eval/eval.py --pred eval/predictions/<model>/<prompt>   # -> eval/results/<model>__<prompt>.md
+    python eval/eval.py --pred eval/predictions/<model>/<prompt> --price-in 3 --price-out 15   # USD per 1M tokens, optional
 
 Reports: field accuracy per set (clean/light/medium/heavy), doc-level exact match,
 per-doc-type accuracy, confidence threshold sweep (coverage vs accuracy), cost.
@@ -117,7 +117,7 @@ def main():
     for (f, s), n in sorted(errs.items(), key=lambda kv: -kv[1])[:10]:
         L.append(f"- `{f}` on `{s}`: {n} errors")
 
-    report = Path(a.report or HERE / "results" / f"{pred_root.name}.md")
+    report = Path(a.report or HERE / "results" / f"{pred_root.parent.name}__{pred_root.name}.md")
     report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text("\n".join(L) + "\n", encoding="utf-8")
     print("\n".join(L))

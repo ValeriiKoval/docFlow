@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "other",
+    "language": "pl",
+    "counterparty": "Gamma Telekom Sp. z o.o.",
+    "recipient": "Biuro Testowe Sp. z o.o.",
+    "document_number": "461/2026",
+    "issue_date": "2026-01-27",
+    "currency": null,
+    "total_amount": null,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.9
+  },
+  "usage": {
+    "input_tokens": 4209,
+    "output_tokens": 555
+  },
+  "latency_s": 4.872860431671143,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "en",
+    "counterparty": "Northwind Utilities Ltd",
+    "recipient": "Jane Example",
+    "document_number": "2025-11-403507",
+    "issue_date": "2025-11-05",
+    "currency": "GBP",
+    "total_amount": 104.67,
+    "due_date": "2025-11-19",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3246,
+    "output_tokens": 346
+  },
+  "latency_s": 3.347646951675415,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

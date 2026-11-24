@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "pl",
+    "counterparty": "Wodociągi Przykładowe Sp. z o.o.",
+    "recipient": "Piotr Wzorcowy",
+    "document_number": "2026-03-681381",
+    "issue_date": "2026-03-09",
+    "currency": "PLN",
+    "total_amount": 1014.63,
+    "due_date": "2026-03-19",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 516
+  },
+  "latency_s": 4.212923765182495,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

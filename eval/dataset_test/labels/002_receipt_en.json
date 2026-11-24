@@ -1,0 +1,27 @@
+{
+  "doc_type": "receipt",
+  "language": "en",
+  "counterparty": "Acme Office Supplies",
+  "recipient": null,
+  "document_number": "65317",
+  "issue_date": "2026-10-24",
+  "currency": "GBP",
+  "total_amount": 17.52,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "002_receipt_en.pdf",
+    "layout": "receipt",
+    "noisy": true,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "currency_symbol",
+      "card",
+      "stamp"
+    ],
+    "sha256": "73fefdc9cda5fed44e263f4fec860e624e9706aa01dab5d7aa03fb5ba821c41f"
+  }
+}

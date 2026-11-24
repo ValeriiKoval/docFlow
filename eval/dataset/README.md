@@ -23,7 +23,7 @@ python eval/make_scans.py --seed 42                # scans/{light,medium,heavy}/
 | Field | Rule |
 |---|---|
 | `counterparty` | Issuing party: seller, provider, insurer, utility, shop, or the organisation issuing an `other` document. |
-| `recipient` | Addressed party: buyer, client, policyholder, customer, or addressee. `null` for receipts and meeting minutes. |
+| `recipient` | Addressed party: buyer, client, policyholder, customer, or addressee. For a certificate, the person it certifies. `null` for receipts and meeting minutes. |
 | `document_number` | Number as printed, without the label (`№`, `nr`, `No.`, `Ref.`). Other numbers are never the document number: account number, tax ID, IBAN, fiscal / terminal ID. `null` if the document has no number. |
 | `issue_date` | Issue / signing / bill date. Not the supply date and not the start of validity. |
 | `currency` | ISO code of `total_amount`. `null` when `total_amount` is `null`. |
@@ -31,7 +31,7 @@ python eval/make_scans.py --seed 42                # scans/{light,medium,heavy}/
 | `due_date` | Only for `invoice` and `utility_bill`. `null` if an invoice is already paid. Always `null` for insurance, even when the premium is paid in instalments with dates. |
 | `valid_from` / `valid_until` | Only for `insurance` and `contract`: the period of cover or effect, inclusive. |
 
-> Note: prompt v1 and the field descriptions in `schema.json` describe `total_amount` as "to pay / insured / contract value". For insurance this is ambiguous: it could mean the premium or the sum insured. This is deliberate for the v1 baseline. Prompt v2 should state the convention above.
+> Note: prompt v1 and the old `schema.json` description of `total_amount` ("to pay / insured / contract value") are ambiguous for insurance: premium or sum insured? The v1 baseline was run with that wording, and the model chose the sum insured on all 9 policies. Prompt v2 and the current schema description state the convention above. Prompt v1 also did not cover the certificate recipient or fiscal numbers on receipts. v2 states both.
 
 ## Traps (`_meta.tags`)
 

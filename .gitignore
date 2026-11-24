@@ -11,6 +11,10 @@ venv/
 eval/predictions/mock/
 # scans are ~1 MB each and reproducible: python eval/make_scans.py --seed 42
 eval/dataset/scans/
+eval/dataset_test/scans/
+
+# run logs
+eval/*.log
 
 # OS / editors
 .DS_Store

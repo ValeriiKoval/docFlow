@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "pl",
+    "counterparty": "Kappa IT s.c.",
+    "recipient": "Jan Testowy",
+    "document_number": null,
+    "issue_date": "2026-03-02",
+    "currency": "PLN",
+    "total_amount": 2601.0,
+    "due_date": null,
+    "valid_from": "2026-03-02",
+    "valid_until": "2027-03-01",
+    "confidence": 0.45
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 839
+  },
+  "latency_s": 7.053870677947998,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "pl",
+    "counterparty": "Alfa-Energia Sp. z o.o.",
+    "recipient": "Piotr Wzorcowy",
+    "document_number": "2026-01-672133",
+    "issue_date": "2026-01-09",
+    "currency": "PLN",
+    "total_amount": 884.84,
+    "due_date": "2026-01-19",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.96
+  },
+  "usage": {
+    "input_tokens": 4339,
+    "output_tokens": 358
+  },
+  "latency_s": 3.3065357208251953,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

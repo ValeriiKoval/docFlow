@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "uk",
+    "counterparty": "ПрАТ «СК Тестова Гарантія»",
+    "recipient": "Ірина Зразкова",
+    "document_number": "279.2026.9109",
+    "issue_date": "2026-05-01",
+    "currency": "UAH",
+    "total_amount": 2446.67,
+    "due_date": null,
+    "valid_from": "2026-05-15",
+    "valid_until": "2027-05-14",
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 4250,
+    "output_tokens": 530
+  },
+  "latency_s": 4.085953950881958,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

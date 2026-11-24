@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "other",
+    "language": "pl",
+    "counterparty": "Delta Serwis Sp. z o.o.",
+    "recipient": "Biuro Testowe Sp. z o.o.",
+    "document_number": "608/2025",
+    "issue_date": "2025-04-21",
+    "currency": null,
+    "total_amount": null,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.85
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 588
+  },
+  "latency_s": 3.996663808822632,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

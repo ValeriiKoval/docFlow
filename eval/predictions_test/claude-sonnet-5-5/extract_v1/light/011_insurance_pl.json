@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "pl",
+    "counterparty": "Omega TU S.A.",
+    "recipient": "Anna Przykładowa",
+    "document_number": "1778079805",
+    "issue_date": "2026-09-24",
+    "currency": "EUR",
+    "total_amount": 2317.73,
+    "due_date": null,
+    "valid_from": "2026-09-24",
+    "valid_until": "2027-09-23",
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3271,
+    "output_tokens": 349
+  },
+  "latency_s": 2.846181869506836,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

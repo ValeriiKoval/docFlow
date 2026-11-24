@@ -1,0 +1,25 @@
+{
+  "doc_type": "invoice",
+  "language": "uk",
+  "counterparty": "ТОВ «Офіс-Постач Тест»",
+  "recipient": "ФОП Тестовий О. В.",
+  "document_number": "РФ-009722",
+  "issue_date": "2025-01-22",
+  "currency": "UAH",
+  "total_amount": 6963.4,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "028_invoice_uk.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "paid_no_due",
+      "supply_date"
+    ],
+    "sha256": "72fe676898ea639448a7e451f4e138b50e209747f7a4a03c8536fcf5e4174165"
+  }
+}

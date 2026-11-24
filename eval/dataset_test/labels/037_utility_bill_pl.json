@@ -1,0 +1,25 @@
+{
+  "doc_type": "utility_bill",
+  "language": "pl",
+  "counterparty": "Alfa-Energia Sp. z o.o.",
+  "recipient": "Anna Przykładowa",
+  "document_number": "2025-02-996258",
+  "issue_date": "2025-02-22",
+  "currency": "PLN",
+  "total_amount": 534.54,
+  "due_date": "2025-03-19",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "037_utility_bill_pl.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "textual_date"
+    ],
+    "sha256": "4f26157be12180d2a23575f8b953c99142dbbf2e25e3c718d0b0a45d3537ba1e"
+  }
+}

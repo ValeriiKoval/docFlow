@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "uk",
+    "counterparty": "ФОП Мельник О. І.",
+    "recipient": "ТОВ «Бухгалтерія Плюс»",
+    "document_number": "SRV-2026-851",
+    "issue_date": "2026-09-21",
+    "currency": "UAH",
+    "total_amount": 8574.48,
+    "due_date": null,
+    "valid_from": "2026-10-01",
+    "valid_until": "2028-09-30",
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 4376,
+    "output_tokens": 364
+  },
+  "latency_s": 3.5396804809570312,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

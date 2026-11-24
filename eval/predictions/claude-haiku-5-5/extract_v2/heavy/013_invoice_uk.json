@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "uk",
+    "counterparty": null,
+    "recipient": "ФОП Ткаченко О. В.",
+    "document_number": "246/2026",
+    "issue_date": null,
+    "currency": "UAH",
+    "total_amount": 4938.37,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.35
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 1186
+  },
+  "latency_s": 6.961341857910156,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

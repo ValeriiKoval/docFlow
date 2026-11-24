@@ -1,0 +1,24 @@
+{
+  "doc_type": "contract",
+  "language": "en",
+  "counterparty": "Fabrikam Services LLC",
+  "recipient": "John Sample",
+  "document_number": "DU-2026-751",
+  "issue_date": "2026-07-02",
+  "currency": "EUR",
+  "total_amount": 11013.06,
+  "due_date": null,
+  "valid_from": "2026-08-01",
+  "valid_until": "2027-01-31",
+  "_meta": {
+    "file": "014_contract_en.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "start_after_signing"
+    ],
+    "sha256": "2e95f9d0a371726aa475298d387253b6d4dd47f1152c591a7650414dff95e50b"
+  }
+}

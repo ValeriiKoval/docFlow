@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "pl",
+    "counterparty": "Beta Ubezpieczenia S.A.",
+    "recipient": "Jan Testowy",
+    "document_number": "5482624860",
+    "issue_date": "2026-09-04",
+    "currency": "PLN",
+    "total_amount": 2707.65,
+    "due_date": null,
+    "valid_from": "2026-09-07",
+    "valid_until": "2027-09-06",
+    "confidence": 0.96
+  },
+  "usage": {
+    "input_tokens": 4290,
+    "output_tokens": 354
+  },
+  "latency_s": 3.3402421474456787,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

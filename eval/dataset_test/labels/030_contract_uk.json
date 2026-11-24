@@ -1,0 +1,24 @@
+{
+  "doc_type": "contract",
+  "language": "uk",
+  "counterparty": "ФОП Мельник О. І.",
+  "recipient": "Олег Тестовий",
+  "document_number": "SRV-2026-322",
+  "issue_date": "2026-08-21",
+  "currency": "UAH",
+  "total_amount": 8583.0,
+  "due_date": null,
+  "valid_from": "2026-09-01",
+  "valid_until": "2027-02-28",
+  "_meta": {
+    "file": "030_contract_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "start_after_signing"
+    ],
+    "sha256": "ddda0cc96adda6994cbd8e9326eb030054daee3b55380e36c38fac785abfea49"
+  }
+}

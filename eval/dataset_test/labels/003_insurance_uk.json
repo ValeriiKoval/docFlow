@@ -1,0 +1,25 @@
+{
+  "doc_type": "insurance",
+  "language": "uk",
+  "counterparty": "ПрАТ «СК Тестова Гарантія»",
+  "recipient": "Марія Прикладна",
+  "document_number": "595.2026.1335",
+  "issue_date": "2026-10-26",
+  "currency": "UAH",
+  "total_amount": 2005.63,
+  "due_date": null,
+  "valid_from": "2026-11-02",
+  "valid_until": "2027-11-01",
+  "_meta": {
+    "file": "003_insurance_uk.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "sum_insured",
+      "installments",
+      "issue_before_start",
+      "stamp"
+    ],
+    "sha256": "a56573410045feb6f2a0b0c9d596b6e1a78307c400518609559696caf68e8f2b"
+  }
+}

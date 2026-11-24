@@ -1,0 +1,26 @@
+{
+  "doc_type": "utility_bill",
+  "language": "pl",
+  "counterparty": "Wodociągi Przykładowe Sp. z o.o.",
+  "recipient": "Anna Przykładowa",
+  "document_number": "2026-10-452467",
+  "issue_date": "2026-10-08",
+  "currency": "PLN",
+  "total_amount": 853.76,
+  "due_date": "2026-10-18",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "027_utility_bill_pl.pdf",
+    "layout": "classic",
+    "noisy": true,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "previous_balance",
+      "stamp"
+    ],
+    "sha256": "264742d1bfdadf3b747b9e45f3eb0b50275b72cc084b08632a443a4595304610"
+  }
+}

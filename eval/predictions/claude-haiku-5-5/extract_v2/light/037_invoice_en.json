@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "en",
+    "counterparty": "Proseware Consulting",
+    "recipient": "Alex Specimen",
+    "document_number": "INV-2025-5374",
+    "issue_date": "2025-05-21",
+    "currency": "GBP",
+    "total_amount": 6066.43,
+    "due_date": "2025-05-28",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 344
+  },
+  "latency_s": 3.925867795944214,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

@@ -1,0 +1,24 @@
+{
+  "doc_type": "invoice",
+  "language": "uk",
+  "counterparty": "ТОВ «ЛінкНет»",
+  "recipient": "ФОП Тестовий О. В.",
+  "document_number": "РФ-007898",
+  "issue_date": "2026-06-28",
+  "currency": "UAH",
+  "total_amount": 5481.89,
+  "due_date": "2026-07-19",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "044_invoice_uk.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "supply_date"
+    ],
+    "sha256": "8efc984e4e677e1a576db238fa043bbfe40054fca8e8a11431284694d7daa690"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "en",
+    "counterparty": "Northwind Utilities Ltd",
+    "recipient": "Alex Specimen",
+    "document_number": "847082107",
+    "issue_date": "2026-06-09",
+    "currency": "GBP",
+    "total_amount": 165.73,
+    "due_date": "2026-06-23",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 504
+  },
+  "latency_s": 4.384519577026367,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

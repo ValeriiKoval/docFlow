@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "uk",
+    "counterparty": "ТДВ «Страхова компанія Приклад»",
+    "recipient": "Марія Прикладна",
+    "document_number": "719.2026.8048",
+    "issue_date": "2026-09-04",
+    "currency": "UAH",
+    "total_amount": 1384.58,
+    "due_date": null,
+    "valid_from": "2026-09-11",
+    "valid_until": "2027-09-10",
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 360
+  },
+  "latency_s": 2.8625638484954834,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

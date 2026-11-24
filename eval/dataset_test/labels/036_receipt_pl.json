@@ -1,0 +1,27 @@
+{
+  "doc_type": "receipt",
+  "language": "pl",
+  "counterparty": "Kiosk Gamma",
+  "recipient": null,
+  "document_number": "53525",
+  "issue_date": "2026-08-11",
+  "currency": "PLN",
+  "total_amount": 83.81,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "036_receipt_pl.pdf",
+    "layout": "receipt",
+    "noisy": true,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "currency_symbol",
+      "card",
+      "stamp"
+    ],
+    "sha256": "a2d55feeff086a4508997f12c831fc54b0f284b8ed75d0090da961a75fb83a69"
+  }
+}

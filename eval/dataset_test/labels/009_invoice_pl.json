@@ -1,0 +1,27 @@
+{
+  "doc_type": "invoice",
+  "language": "pl",
+  "counterparty": "Kappa IT s.c.",
+  "recipient": "Piotr Wzorcowy",
+  "document_number": "FV/2025/04/108",
+  "issue_date": "2025-04-08",
+  "currency": "PLN",
+  "total_amount": 10805.08,
+  "due_date": "2025-04-15",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "009_invoice_pl.pdf",
+    "layout": "boxed",
+    "noisy": true,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "textual_date",
+      "currency_symbol",
+      "supply_date",
+      "stamp"
+    ],
+    "sha256": "5b53d9e294d0aa13ffff21abdfd80ec272dc6e173f9dc3c871ad3bc9265554a8"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "other",
+    "language": "pl",
+    "counterparty": "Biuro Rachunkowe Sigma",
+    "recipient": "Kancelaria Przykład",
+    "document_number": "739/2025",
+    "issue_date": "2025-02-21",
+    "currency": null,
+    "total_amount": null,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.85
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 339
+  },
+  "latency_s": 2.8902668952941895,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "uk",
+    "counterparty": "ФОП Петренко Т. С.",
+    "recipient": null,
+    "document_number": null,
+    "issue_date": "2025-04-02",
+    "currency": "UAH",
+    "total_amount": 1810.05,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.5
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 332
+  },
+  "latency_s": 3.2617735862731934,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

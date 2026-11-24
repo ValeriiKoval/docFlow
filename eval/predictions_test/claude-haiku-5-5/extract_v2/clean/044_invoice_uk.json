@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "uk",
+    "counterparty": "ТОВ «ЛінкНет»",
+    "recipient": "ФОП Тестовий О. В.",
+    "document_number": "РФ-007898",
+    "issue_date": "2026-06-28",
+    "currency": "UAH",
+    "total_amount": 5481.89,
+    "due_date": "2026-07-19",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 4318,
+    "output_tokens": 545
+  },
+  "latency_s": 3.0066592693328857,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

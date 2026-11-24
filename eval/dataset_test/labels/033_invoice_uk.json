@@ -1,0 +1,23 @@
+{
+  "doc_type": "invoice",
+  "language": "uk",
+  "counterparty": "ФОП Мельник О. І.",
+  "recipient": "ФОП Тестовий О. В.",
+  "document_number": "РФ-005808",
+  "issue_date": "2025-07-01",
+  "currency": "UAH",
+  "total_amount": 1708.9,
+  "due_date": "2025-07-15",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "033_invoice_uk.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban"
+    ],
+    "sha256": "dcd19f8f1cba3d1fe8f573955ca35119a51ffd65812daf2fb81d0e64c5e8f00e"
+  }
+}

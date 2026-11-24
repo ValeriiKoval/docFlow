@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "uk",
+    "counterparty": "КП «Міськводоканал-Тест»",
+    "recipient": "Олег Тестовий",
+    "document_number": "2026-06-485872",
+    "issue_date": "2026-06-12",
+    "currency": "UAH",
+    "total_amount": 4858.61,
+    "due_date": "2026-06-22",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 354
+  },
+  "latency_s": 4.245689630508423,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

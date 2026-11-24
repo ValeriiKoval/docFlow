@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "uk",
+    "counterparty": "ТДВ «Страхова компанія Приклад»",
+    "recipient": "Ірина Зразкова",
+    "document_number": "274.2025.3868",
+    "issue_date": "2025-05-30",
+    "currency": "UAH",
+    "total_amount": 2341.29,
+    "due_date": null,
+    "valid_from": "2025-05-30",
+    "valid_until": "2026-05-29",
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 361
+  },
+  "latency_s": 2.54754900932312,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

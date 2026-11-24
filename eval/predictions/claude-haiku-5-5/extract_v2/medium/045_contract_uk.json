@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "uk",
+    "counterparty": "ТОВ «Офіс-Постач Тест»",
+    "recipient": "ФОП Тестовий О. В.",
+    "document_number": "K-2025-346",
+    "issue_date": "2025-06-06",
+    "currency": "UAH",
+    "total_amount": 23326.8,
+    "due_date": null,
+    "valid_from": "2025-06-06",
+    "valid_until": "2026-06-05",
+    "confidence": 0.9
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 554
+  },
+  "latency_s": 3.2330851554870605,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

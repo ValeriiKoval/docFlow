@@ -1,0 +1,26 @@
+{
+  "doc_type": "receipt",
+  "language": "uk",
+  "counterparty": "ФОП Петренко Т. С.",
+  "recipient": null,
+  "document_number": null,
+  "issue_date": "2025-04-02",
+  "currency": "UAH",
+  "total_amount": 1810.05,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "026_receipt_uk.pdf",
+    "layout": "receipt",
+    "noisy": false,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "cash_change",
+      "no_number"
+    ],
+    "sha256": "b69833dd3a4564f07a4de5ebb0f8806d85151b1790158160ddef5663329c4405"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "pl",
+    "counterparty": "Market Testowy s.c.",
+    "recipient": null,
+    "document_number": null,
+    "issue_date": "2026-02-07",
+    "currency": "PLN",
+    "total_amount": 113.06,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.8
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 548
+  },
+  "latency_s": 4.774461984634399,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

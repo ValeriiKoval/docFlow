@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "en",
+    "counterparty": "Wrights Grocers",
+    "recipient": null,
+    "document_number": null,
+    "issue_date": null,
+    "currency": "GBP",
+    "total_amount": 57.29,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.35
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 593
+  },
+  "latency_s": 3.703108310699463,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

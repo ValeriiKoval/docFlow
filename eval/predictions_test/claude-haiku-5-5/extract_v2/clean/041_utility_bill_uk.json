@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "uk",
+    "counterparty": "ТОВ «Карпатська Енергія»",
+    "recipient": "Марія Прикладна",
+    "document_number": "2026-02-780050",
+    "issue_date": "2026-02-25",
+    "currency": "UAH",
+    "total_amount": 3432.01,
+    "due_date": "2026-03-17",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.92
+  },
+  "usage": {
+    "input_tokens": 4339,
+    "output_tokens": 355
+  },
+  "latency_s": 2.617192506790161,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

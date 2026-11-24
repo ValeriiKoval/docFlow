@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "uk",
+    "counterparty": "Магазин «Канцтовари-Приклад»",
+    "recipient": null,
+    "document_number": "8014505887",
+    "issue_date": "2026-08-04",
+    "currency": "UAH",
+    "total_amount": 747.41,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.88
+  },
+  "usage": {
+    "input_tokens": 3533,
+    "output_tokens": 338
+  },
+  "latency_s": 2.3517544269561768,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

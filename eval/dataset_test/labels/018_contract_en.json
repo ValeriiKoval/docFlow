@@ -1,0 +1,24 @@
+{
+  "doc_type": "contract",
+  "language": "en",
+  "counterparty": "Proseware Consulting",
+  "recipient": "Sample & Co Bookkeeping",
+  "document_number": "41/2025",
+  "issue_date": "2025-10-08",
+  "currency": "EUR",
+  "total_amount": 15138.24,
+  "due_date": null,
+  "valid_from": "2025-10-08",
+  "valid_until": "2027-10-07",
+  "_meta": {
+    "file": "018_contract_en.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "currency_symbol"
+    ],
+    "sha256": "1938d4337413e9d53613ce0a0fcced3b04faa75dc43eca169018802ce94f314f"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "doc_type": "contract",
+  "language": "pl",
+  "counterparty": "Biuro Rachunkowe Sigma",
+  "recipient": "Piotr Wzorcowy",
+  "document_number": "27/2025",
+  "issue_date": "2025-12-05",
+  "currency": "PLN",
+  "total_amount": 16508.64,
+  "due_date": null,
+  "valid_from": "2025-12-05",
+  "valid_until": "2027-12-04",
+  "_meta": {
+    "file": "022_contract_pl.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative"
+    ],
+    "sha256": "73d88a5b32e6eec1cf95f2594c8ef7672366ea5c2b529c03c186e4487d3be209"
+  }
+}

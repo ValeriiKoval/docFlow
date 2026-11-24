@@ -1,0 +1,26 @@
+{
+  "doc_type": "contract",
+  "language": "pl",
+  "counterparty": "Kappa IT s.c.",
+  "recipient": "Jan Testowy",
+  "document_number": null,
+  "issue_date": "2026-03-02",
+  "currency": "PLN",
+  "total_amount": 2601.36,
+  "due_date": null,
+  "valid_from": "2026-03-02",
+  "valid_until": "2027-03-01",
+  "_meta": {
+    "file": "005_contract_pl.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "textual_date",
+      "currency_symbol",
+      "no_number"
+    ],
+    "sha256": "ee42eacffb66d7d29ca4653c3bc30e5049b363dbb130683685ab4e1833a425f8"
+  }
+}

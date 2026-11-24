@@ -1,0 +1,22 @@
+{
+  "doc_type": "other",
+  "language": "uk",
+  "counterparty": "ТОВ «Офіс-Постач Тест»",
+  "recipient": "Олег Тестовий",
+  "document_number": "231",
+  "issue_date": "2026-03-05",
+  "currency": null,
+  "total_amount": null,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "029_other_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "other_certificate"
+    ],
+    "sha256": "afba7014a31815dccf17401a9a556c1767327cd9f808ccec7535e92c73f15d02"
+  }
+}

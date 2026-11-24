@@ -1,0 +1,26 @@
+{
+  "doc_type": "utility_bill",
+  "language": "en",
+  "counterparty": "Tailspin Water plc",
+  "recipient": "John Sample",
+  "document_number": "399939785",
+  "issue_date": "2026-06-29",
+  "currency": "EUR",
+  "total_amount": 87.66,
+  "due_date": "2026-07-09",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "042_utility_bill_en.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "textual_date",
+      "currency_symbol"
+    ],
+    "sha256": "114bd8dcfafa827ad161f518cbad617577948192d462ba27540fef6d1ca98fee"
+  }
+}

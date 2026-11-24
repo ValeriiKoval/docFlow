@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "pl",
+    "counterparty": "Wodociągi Przykładowa Sp. z o.o.",
+    "recipient": "Anna Przykładowa",
+    "document_number": "2025-05-910616",
+    "issue_date": null,
+    "currency": "PLN",
+    "total_amount": 700.99,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.45
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 984
+  },
+  "latency_s": 6.664176940917969,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "uk",
+    "counterparty": "ФОП Мальник О. І.",
+    "recipient": "ФОП Тестовий О. В.",
+    "document_number": "РФ-005808",
+    "issue_date": "2025-07-01",
+    "currency": "UAH",
+    "total_amount": 1708.9,
+    "due_date": "2025-07-15",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.5
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 871
+  },
+  "latency_s": 5.271753787994385,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

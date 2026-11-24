@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "utility_bill",
+    "language": "pl",
+    "counterparty": "Alfa-Energia Sp. z o.o.",
+    "recipient": "Anna Przykładowa",
+    "document_number": "2025-02-996258",
+    "issue_date": "2025-02-22",
+    "currency": "PLN",
+    "total_amount": 534.54,
+    "due_date": "2025-03-19",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.4
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 1002
+  },
+  "latency_s": 5.96369194984436,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

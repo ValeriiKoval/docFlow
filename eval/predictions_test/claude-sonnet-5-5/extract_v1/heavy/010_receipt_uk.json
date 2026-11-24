@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "uk",
+    "counterparty": "Магазин «Канцтовари Practika»",
+    "recipient": null,
+    "document_number": null,
+    "issue_date": "2026-04-09",
+    "currency": "UAH",
+    "total_amount": 983.58,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.3
+  },
+  "usage": {
+    "input_tokens": 3284,
+    "output_tokens": 333
+  },
+  "latency_s": 3.768179178237915,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

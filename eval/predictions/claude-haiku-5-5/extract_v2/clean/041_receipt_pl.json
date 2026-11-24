@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "pl",
+    "counterparty": "Sklep Przykład Sp. z o.o.",
+    "recipient": null,
+    "document_number": "61812",
+    "issue_date": "2025-11-11",
+    "currency": "PLN",
+    "total_amount": 177.81,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.92
+  },
+  "usage": {
+    "input_tokens": 4248,
+    "output_tokens": 494
+  },
+  "latency_s": 2.9643101692199707,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

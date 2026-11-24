@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "en",
+    "counterparty": "Litware Assurance Ltd",
+    "recipient": "Jane Example",
+    "document_number": "HC5924115",
+    "issue_date": "2026-09-03",
+    "currency": "EUR",
+    "total_amount": 806.1,
+    "due_date": null,
+    "valid_from": "2026-09-03",
+    "valid_until": "2027-09-02",
+    "confidence": 0.4
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 346
+  },
+  "latency_s": 4.182041168212891,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

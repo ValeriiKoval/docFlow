@@ -1,0 +1,24 @@
+{
+  "doc_type": "insurance",
+  "language": "pl",
+  "counterparty": "Omega TU S.A.",
+  "recipient": "Piotr Wzorcowy",
+  "document_number": "6415345180",
+  "issue_date": "2026-06-03",
+  "currency": "PLN",
+  "total_amount": 1626.49,
+  "due_date": null,
+  "valid_from": "2026-06-04",
+  "valid_until": "2027-06-03",
+  "_meta": {
+    "file": "004_insurance_pl.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "sum_insured",
+      "installments",
+      "issue_before_start"
+    ],
+    "sha256": "7b843288a2514eb73459283fa0f2cf5694f57ce118a9c037c6f4afbc8da72104"
+  }
+}

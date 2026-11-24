@@ -1,0 +1,25 @@
+{
+  "doc_type": "insurance",
+  "language": "en",
+  "counterparty": "Contoso Insurance plc",
+  "recipient": "Alex Specimen",
+  "document_number": "POL-5035-8334",
+  "issue_date": "2025-02-16",
+  "currency": "USD",
+  "total_amount": 3054.89,
+  "due_date": null,
+  "valid_from": "2025-03-02",
+  "valid_until": "2026-03-01",
+  "_meta": {
+    "file": "048_insurance_en.pdf",
+    "layout": "boxed",
+    "noisy": true,
+    "tags": [
+      "sum_insured",
+      "currency_symbol",
+      "issue_before_start",
+      "stamp"
+    ],
+    "sha256": "f3ab0e7f475a9b3eb59642764d7573af1e0968a0d8d6b8a4f5319846b5e4497d"
+  }
+}

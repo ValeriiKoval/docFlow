@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "other",
+    "language": "en",
+    "counterparty": "Proseware Consulting",
+    "recipient": null,
+    "document_number": null,
+    "issue_date": "2025-01-21",
+    "currency": null,
+    "total_amount": null,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.7
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 319
+  },
+  "latency_s": 3.062025785446167,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

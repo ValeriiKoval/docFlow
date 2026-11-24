@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "uk",
+    "counterparty": "ТОВ «Офіс-Постач Тест»",
+    "recipient": "ФОП Тестовий О. В.",
+    "document_number": "РФ-009722",
+    "issue_date": "2025-01-22",
+    "currency": "UAH",
+    "total_amount": 6963.4,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 4365,
+    "output_tokens": 354
+  },
+  "latency_s": 3.2623507976531982,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

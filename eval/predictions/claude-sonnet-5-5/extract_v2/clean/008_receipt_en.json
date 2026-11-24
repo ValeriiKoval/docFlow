@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "en",
+    "counterparty": "Acme Office Supplies",
+    "recipient": null,
+    "document_number": "79169",
+    "issue_date": "2026-02-22",
+    "currency": "GBP",
+    "total_amount": 86.51,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.97
+  },
+  "usage": {
+    "input_tokens": 4222,
+    "output_tokens": 369
+  },
+  "latency_s": 2.867659568786621,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

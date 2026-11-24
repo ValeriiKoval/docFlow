@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "pl",
+    "counterparty": "Kappa IT s.c.",
+    "recipient": "Piotr Wzorcowy",
+    "document_number": "FV/2025/04/108",
+    "issue_date": "2025-04-05",
+    "currency": "PLN",
+    "total_amount": 10805.08,
+    "due_date": "2025-04-15",
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.5
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 783
+  },
+  "latency_s": 7.320420742034912,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

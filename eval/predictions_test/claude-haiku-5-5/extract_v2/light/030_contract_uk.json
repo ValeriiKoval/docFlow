@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "uk",
+    "counterparty": "ФОП Мельник О. І.",
+    "recipient": "Олег Тестовий",
+    "document_number": "SRV-2026-322",
+    "issue_date": "2026-08-21",
+    "currency": "UAH",
+    "total_amount": 8583.0,
+    "due_date": null,
+    "valid_from": "2026-09-01",
+    "valid_until": "2027-02-28",
+    "confidence": 0.9
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 354
+  },
+  "latency_s": 2.1301701068878174,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

@@ -1,0 +1,24 @@
+{
+  "doc_type": "utility_bill",
+  "language": "uk",
+  "counterparty": "КП «Міськводоканал-Тест»",
+  "recipient": "Ірина Зразкова",
+  "document_number": "197497735",
+  "issue_date": "2025-05-02",
+  "currency": "UAH",
+  "total_amount": 3406.99,
+  "due_date": "2025-05-16",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "038_utility_bill_uk.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban"
+    ],
+    "sha256": "4dfb5af2b2376fe56fc17b239f315ecd56880f9972dbc219d61fd3611b8b40af"
+  }
+}

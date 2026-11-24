@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "invoice",
+    "language": "pl",
+    "counterparty": "Biuro Rachunkowe Sigma",
+    "recipient": "Biuro Tesmann Sp. z o.o.",
+    "document_number": "145/05/2025",
+    "issue_date": null,
+    "currency": "PLN",
+    "total_amount": 2978.13,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.3
+  },
+  "usage": {
+    "input_tokens": 3948,
+    "output_tokens": 993
+  },
+  "latency_s": 5.774202823638916,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-haiku-5-5"
+}

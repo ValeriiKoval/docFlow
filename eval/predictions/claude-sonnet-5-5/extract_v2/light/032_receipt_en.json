@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "receipt",
+    "language": "en",
+    "counterparty": "Acme Office Supplies",
+    "recipient": null,
+    "document_number": "50823",
+    "issue_date": "2026-11-27",
+    "currency": "GBP",
+    "total_amount": 43.31,
+    "due_date": null,
+    "valid_from": null,
+    "valid_until": null,
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 327
+  },
+  "latency_s": 3.6648969650268555,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

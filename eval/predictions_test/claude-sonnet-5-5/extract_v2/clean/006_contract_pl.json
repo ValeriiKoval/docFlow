@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "pl",
+    "counterparty": "Biuro Rachunkowe Sigma",
+    "recipient": "Piotr Wzorcowy",
+    "document_number": "5/2025",
+    "issue_date": "2025-06-07",
+    "currency": "PLN",
+    "total_amount": 5116.44,
+    "due_date": null,
+    "valid_from": "2025-06-07",
+    "valid_until": "2025-12-06",
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 4404,
+    "output_tokens": 356
+  },
+  "latency_s": 2.3306162357330322,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

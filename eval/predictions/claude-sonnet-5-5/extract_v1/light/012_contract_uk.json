@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "uk",
+    "counterparty": "ТОВ «Дніпро-Сервіс»",
+    "recipient": "Марія Прикладна",
+    "document_number": null,
+    "issue_date": "2026-08-27",
+    "currency": "UAH",
+    "total_amount": 6860.28,
+    "due_date": null,
+    "valid_from": "2026-09-01",
+    "valid_until": "2027-08-31",
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3246,
+    "output_tokens": 353
+  },
+  "latency_s": 2.723825216293335,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "pl",
+    "counterparty": "Beta Ubezpieczenia S.A.",
+    "recipient": "Jan Testowy",
+    "document_number": "PL-AC 2188789",
+    "issue_date": "2025-01-08",
+    "currency": "PLN",
+    "total_amount": 2614.73,
+    "due_date": null,
+    "valid_from": "2025-01-08",
+    "valid_until": "2026-01-07",
+    "confidence": 0.7
+  },
+  "usage": {
+    "input_tokens": 3259,
+    "output_tokens": 754
+  },
+  "latency_s": 6.476101875305176,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

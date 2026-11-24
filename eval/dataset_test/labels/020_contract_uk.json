@@ -1,0 +1,24 @@
+{
+  "doc_type": "contract",
+  "language": "uk",
+  "counterparty": "ФОП Мельник О. І.",
+  "recipient": "ТОВ «Бухгалтерія Плюс»",
+  "document_number": "K-2026-815",
+  "issue_date": "2026-09-01",
+  "currency": "UAH",
+  "total_amount": 11525.58,
+  "due_date": null,
+  "valid_from": "2026-09-01",
+  "valid_until": "2027-02-28",
+  "_meta": {
+    "file": "020_contract_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "currency_symbol"
+    ],
+    "sha256": "b674bd829ea7d6ad9dd7537c3984a31028da6311f267ea951d37a40eb0a1639f"
+  }
+}

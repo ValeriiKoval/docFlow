@@ -1,0 +1,24 @@
+{
+  "doc_type": "other",
+  "language": "pl",
+  "counterparty": "Delta Serwis Sp. z o.o.",
+  "recipient": "Biuro Testowe Sp. z o.o.",
+  "document_number": "608/2025",
+  "issue_date": "2025-04-21",
+  "currency": null,
+  "total_amount": null,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "013_other_pl.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "other_letter",
+      "textual_date",
+      "stamp"
+    ],
+    "sha256": "59f33242761f4675edb70dd1782025283202e62d27d4d6c4cbc87c63eac3e0e8"
+  }
+}

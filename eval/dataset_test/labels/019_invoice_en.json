@@ -1,0 +1,25 @@
+{
+  "doc_type": "invoice",
+  "language": "en",
+  "counterparty": "Adventure Works Ltd",
+  "recipient": "Sample & Co Bookkeeping",
+  "document_number": "E486/2026",
+  "issue_date": "2026-06-23",
+  "currency": "GBP",
+  "total_amount": 493.32,
+  "due_date": "2026-07-23",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "019_invoice_en.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "currency_symbol",
+      "supply_date"
+    ],
+    "sha256": "80803c136e3d0992b11e2f57f50409f719446801aa0e7f20d461c2e2e3db3a44"
+  }
+}

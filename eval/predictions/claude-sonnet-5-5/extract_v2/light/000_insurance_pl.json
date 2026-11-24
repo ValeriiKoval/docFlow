@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "insurance",
+    "language": "pl",
+    "counterparty": "Omega TU S.A.",
+    "recipient": "Piotr Wzorcowy",
+    "document_number": "PL-AC 1768805",
+    "issue_date": "2026-07-20",
+    "currency": "PLN",
+    "total_amount": 1516.4,
+    "due_date": null,
+    "valid_from": "2026-07-21",
+    "valid_until": "2027-07-20",
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 356
+  },
+  "latency_s": 3.4063806533813477,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

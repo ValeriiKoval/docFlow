@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "en",
+    "counterparty": "Fabrikam Services LLC",
+    "recipient": "John Sample",
+    "document_number": null,
+    "issue_date": "2025-07-14",
+    "currency": "EUR",
+    "total_amount": 7622.7,
+    "due_date": null,
+    "valid_from": "2025-07-14",
+    "valid_until": "2026-01-13",
+    "confidence": 0.95
+  },
+  "usage": {
+    "input_tokens": 3546,
+    "output_tokens": 341
+  },
+  "latency_s": 8.99476957321167,
+  "error": null,
+  "prompt": "extract_v1",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

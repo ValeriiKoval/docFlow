@@ -1,0 +1,26 @@
+{
+  "doc_type": "contract",
+  "language": "en",
+  "counterparty": "Fabrikam Services LLC",
+  "recipient": "Jane Example",
+  "document_number": "38/2026",
+  "issue_date": "2026-05-18",
+  "currency": "EUR",
+  "total_amount": 55031.04,
+  "due_date": null,
+  "valid_from": "2026-05-18",
+  "valid_until": "2028-05-17",
+  "_meta": {
+    "file": "043_contract_en.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "textual_date",
+      "currency_symbol",
+      "stamp"
+    ],
+    "sha256": "0055ad4a3ccf909626aa3c1087a36a1761676124074b0fafb54801a79e643c8b"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "doc_type": "invoice",
+  "language": "en",
+  "counterparty": "Acme Office Supplies",
+  "recipient": "John Sample",
+  "document_number": "INV-2026-8598",
+  "issue_date": "2026-03-02",
+  "currency": "EUR",
+  "total_amount": 3507.17,
+  "due_date": "2026-04-01",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "015_invoice_en.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban"
+    ],
+    "sha256": "7b9db59fac749d68062871067aad9e00b7a9aa3070631a96f5751291bf857748"
+  }
+}

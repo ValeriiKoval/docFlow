@@ -1,0 +1,26 @@
+{
+  "extraction": {
+    "doc_type": "contract",
+    "language": "en",
+    "counterparty": "Proseware Consulting",
+    "recipient": "Sample & Co Bookkeeping",
+    "document_number": "41/2025",
+    "issue_date": "2025-10-08",
+    "currency": "EUR",
+    "total_amount": 15138.24,
+    "due_date": null,
+    "valid_from": "2025-10-08",
+    "valid_until": "2027-10-07",
+    "confidence": 0.93
+  },
+  "usage": {
+    "input_tokens": 3935,
+    "output_tokens": 350
+  },
+  "latency_s": 3.041820764541626,
+  "error": null,
+  "prompt": "extract_v2",
+  "attempts": 1,
+  "stop_reason": "tool_use",
+  "served_by": "claude-sonnet-5-5"
+}

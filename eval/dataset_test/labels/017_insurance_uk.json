@@ -1,0 +1,23 @@
+{
+  "doc_type": "insurance",
+  "language": "uk",
+  "counterparty": "ПрАТ «СК Тестова Гарантія»",
+  "recipient": "Ірина Зразкова",
+  "document_number": "279.2026.9109",
+  "issue_date": "2026-05-01",
+  "currency": "UAH",
+  "total_amount": 2446.67,
+  "due_date": null,
+  "valid_from": "2026-05-15",
+  "valid_until": "2027-05-14",
+  "_meta": {
+    "file": "017_insurance_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "sum_insured",
+      "issue_before_start"
+    ],
+    "sha256": "dc6b63b62ec04905e12f783ff54aa4cb95104c11a015adc268d0356d049c06c2"
+  }
+}
