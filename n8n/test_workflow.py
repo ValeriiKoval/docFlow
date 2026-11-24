@@ -5,8 +5,10 @@
     TELEGRAM_API_BASE=http://host.docker.internal:8081 TELEGRAM_BOT_TOKEN=123:mock docker compose up -d
     python n8n/test_workflow.py
 
-Sends fake Telegram updates to http://localhost:5678/webhook/telegram and checks what the bot "sent".
-Makes ~2 Claude calls (~$0.03) unless the documents are already in the database (duplicates).
+Sends fake Telegram updates to http://localhost:5678/webhook/telegram and checks what the bot "sent":
+intake, review buttons, corrections, Q&A agent, /deadlines, chat allowlist, reminders.
+Costs ~$0.05 in Claude calls (2 extractions unless already in the DB, 2 agent answers).
+If TELEGRAM_ALLOWED_CHAT_IDS is set, it must include the test chat 555.
 """
 import json
 import sys
@@ -19,6 +21,7 @@ from dotenv import dotenv_values
 ROOT = Path(__file__).resolve().parents[1]
 ENV = dotenv_values(ROOT / ".env")
 WEBHOOK = "http://localhost:5678/webhook/telegram"
+REMINDERS = "http://localhost:5678/webhook/reminders/run"
 MOCK = "http://localhost:8081/_sent"
 CHAT = {"id": 555, "type": "private"}
 USER = {"id": 777, "is_bot": False, "first_name": "Test", "username": "reviewer_test"}
@@ -133,6 +136,43 @@ def main():
     check({"answerCallbackQuery", "editMessageReplyMarkup"} <= methods, "callback answered, buttons removed")
     text = texts(sent)
     check("approved" in text and "reviewer_test" in text, "approval confirmed with reviewer name")
+
+    # ---- stage 5: Q&A agent, access control, reminders -------------------------------------
+    inv = json.loads((DS / "labels" / (Path(CLEAN).stem + ".json")).read_text(encoding="utf-8"))
+    sent = step("question -> Q&A agent", msg(6, text=f"How much do I have to pay {inv['counterparty']}, and by what date?"), 2,)
+    methods = {s["method"] for s in sent}
+    text = texts(sent)
+    check("sendChatAction" in methods, "typing indicator")
+    check(inv["due_date"] in text and f"{inv['total_amount']:.2f}".rstrip("0").rstrip(".") in text.replace(" ", "").replace(",", "."),
+          f"answer mentions due date {inv['due_date']} and amount {inv['total_amount']}")
+
+    sent = step("/deadlines -> agent", msg(7, text="/deadlines"), 2)
+    check(any(s["method"] == "sendMessage" for s in sent), "deadlines answer sent")
+
+    if ENV.get("TELEGRAM_ALLOWED_CHAT_IDS"):
+        stranger = {"id": 999999, "type": "private"}
+        sent = step("chat not in allowlist", {"message": {"message_id": 8, "date": int(time.time()), "chat": stranger,
+                                                          "from": USER, "text": "Show all documents"}}, 1)
+        check(len(sent) == 1 and "has no access" in sent[0]["payload"]["text"] and "999999" in sent[0]["payload"]["text"],
+              "stranger gets access denied with chat id, no data")
+    else:
+        print("\n# allowlist: TELEGRAM_ALLOWED_CHAT_IDS not set, skipped")
+
+    print("\n# reminders: run now for a day 3 days before the invoice is due")
+    http("DELETE", MOCK)
+    from datetime import date, timedelta
+    day = (date.fromisoformat(inv["due_date"]) - timedelta(days=3)).isoformat()
+    http("POST", REMINDERS, {"today": day}, {"X-API-Key": ENV["SERVICE_API_KEY"]})
+    sent = wait_sent(1)
+    for s in sent:
+        print(f"  -> {s['method']}: {s['payload'].get('text', '')[:200].replace(chr(10), ' | ')}")
+    mine = [s for s in sent if s["payload"].get("chat_id") == CHAT["id"]]
+    check(mine and "Deadline reminders" in mine[0]["payload"]["text"] and inv["due_date"] in mine[0]["payload"]["text"]
+          and "in 3 days" in mine[0]["payload"]["text"], "reminder for the invoice sent to the chat it came from")
+    http("DELETE", MOCK)
+    http("POST", REMINDERS, {"today": day}, {"X-API-Key": "wrong"})
+    time.sleep(4)
+    check(http("GET", MOCK) == [], "reminders webhook rejects a wrong key")
 
     print(f"\n{'ALL OK' if not check.failed else f'{check.failed} FAILED'}")
     sys.exit(1 if check.failed else 0)

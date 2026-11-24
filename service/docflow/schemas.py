@@ -137,3 +137,21 @@ class Deadline(BaseModel):
     total_amount: float | None
     currency: str | None
     status: Status
+    source: str | None = None
+    source_ref: str | None = None
+
+
+class AskIn(BaseModel):
+    question: str = Field(min_length=1, max_length=1000)
+    chat_ref: str | None = Field(None, description="Where the question came from, e.g. telegram chat id")
+    today: date | None = Field(None, description="Defaults to the server date; set for demos and evals")
+
+
+class AskOut(BaseModel):
+    answer: str
+    tool_calls: list[dict]
+    turns: int
+    usage: dict
+    cost_usd: float
+    latency_s: float
+    error: str | None = None

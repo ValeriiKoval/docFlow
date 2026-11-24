@@ -30,6 +30,9 @@ class Settings:
     api_key: str = _env("SERVICE_API_KEY", "")  # empty = no auth (local dev only)
     max_file_mb: int = field(default_factory=lambda: int(os.getenv("MAX_FILE_MB", "20")))
     max_pages: int = field(default_factory=lambda: int(os.getenv("MAX_PAGES", "20")))
+    # Haiku: 12/13 on the QA eval (Sonnet 13/13) at ~1/15 of the cost: eval/RESULTS.md
+    agent_model: str = _env("DOCFLOW_AGENT_MODEL", "claude-haiku-5-5")
+    agent_effort: str = _env("DOCFLOW_AGENT_EFFORT", "low")    # short chat answers; "" = model default
 
 
 @lru_cache

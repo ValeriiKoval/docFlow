@@ -9,6 +9,8 @@ Pipeline for POST /extract:
     -> Claude extraction (strict tool schema) -> pydantic normalisation -> business checks
     -> status: auto_accepted (confidence >= threshold and no issues) | needs_review | failed
     -> every Claude call is logged in `runs` (tokens, cost, latency, error)
+
+POST /ask: Q&A agent (docflow/agent.py) over the stored documents, logged in `agent_runs`.
 """
 import secrets
 from datetime import date, datetime, timedelta, timezone
@@ -16,25 +18,28 @@ from datetime import date, datetime, timedelta, timezone
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import ValidationError
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .config import Settings, get_settings
-from .db import Document, Run, make_sessionmaker
+from .agent import Agent
+from .db import AgentRun, Document, Run, make_sessionmaker
 from .extraction import ExtractionError, Extractor
 from .files import InputError, inspect, store
-from .schemas import (Deadline, DocumentOut, ExtractResponse, Fields, ReviewIn, Status, business_checks)
+from .queries import deadlines as query_deadlines, search_documents
+from .schemas import (AskIn, AskOut, Deadline, DocumentOut, ExtractResponse, Fields, ReviewIn, Status,
+                      business_checks)
 
-VERIFIED = ("auto_accepted", "approved", "corrected")
 
-
-def create_app(settings: Settings | None = None, extractor: Extractor | None = None) -> FastAPI:
+def create_app(settings: Settings | None = None, extractor: Extractor | None = None,
+               agent: Agent | None = None) -> FastAPI:
     settings = settings or get_settings()
-    app = FastAPI(title="DocFlow AI", version="0.3.0",
-                  description="Intake of business documents: Claude extraction, validation, review, deadlines.")
+    app = FastAPI(title="DocFlow AI", version="0.5.0",
+                  description="Intake of business documents: Claude extraction, validation, review, deadlines, Q&A.")
     app.state.settings = settings
     app.state.sessionmaker = make_sessionmaker(settings.database_url)
     app.state.extractor = extractor  # created lazily, so the app starts without an API key
+    app.state.agent = agent
 
     def get_db():
         with app.state.sessionmaker() as db:
@@ -45,6 +50,11 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
             app.state.extractor = Extractor(settings.model, settings.prompt_version, settings.prompts_dir,
                                             settings.schema_path)
         return app.state.extractor
+
+    def get_agent() -> Agent:
+        if app.state.agent is None:
+            app.state.agent = Agent(app.state.sessionmaker, settings.agent_model, effort=settings.agent_effort or None)
+        return app.state.agent
 
     def auth(x_api_key: str | None = Header(default=None)):
         if settings.api_key and not secrets.compare_digest(x_api_key or "", settings.api_key):
@@ -130,21 +140,7 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
                date_from: date | None = Query(None, description="issue_date >="),
                date_to: date | None = Query(None, description="issue_date <="),
                limit: int = Query(50, le=200), offset: int = 0, db: Session = Depends(get_db)):
-        stmt = select(Document)
-        if q:
-            like = f"%{q.strip()}%"
-            stmt = stmt.where(or_(Document.counterparty.ilike(like), Document.recipient.ilike(like),
-                                  Document.document_number.ilike(like), Document.filename.ilike(like)))
-        if doc_type:
-            stmt = stmt.where(Document.doc_type == doc_type)
-        if status:
-            stmt = stmt.where(Document.status == status)
-        if date_from:
-            stmt = stmt.where(Document.issue_date >= date_from)
-        if date_to:
-            stmt = stmt.where(Document.issue_date <= date_to)
-        stmt = stmt.order_by(Document.issue_date.desc().nulls_last(), Document.id.desc()).limit(limit).offset(offset)
-        return db.scalars(stmt).all()
+        return search_documents(db, q, doc_type, status, date_from, date_to, limit=limit, offset=offset)
 
     @app.get("/documents/{doc_id}", response_model=DocumentOut, dependencies=[Depends(auth)])
     def get_document(doc_id: int, db: Session = Depends(get_db)):
@@ -190,23 +186,30 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
 
     @app.get("/deadlines", response_model=list[Deadline], dependencies=[Depends(auth)])
     def deadlines(within_days: int = Query(30, ge=0, le=366),
+                  past_days: int = Query(0, ge=0, le=366, description="Also include up to N days back (overdue)"),
                   today: date | None = Query(None, description="Defaults to the server date; set for demos"),
                   include_unverified: bool = Query(True, description="Include documents still awaiting review"),
+                  days_left: str | None = Query(None, description="Comma-separated reminder offsets, e.g. 7,3,1,0"),
                   db: Session = Depends(get_db)):
-        """Upcoming payment deadlines (due_date) and expiries (valid_until), soonest first."""
-        today = today or date.today()
-        until = today + timedelta(days=within_days)
-        statuses = list(VERIFIED) + (["needs_review"] if include_unverified else [])
-        out = []
-        for col, kind in ((Document.due_date, "payment_due"), (Document.valid_until, "expires")):
-            rows = db.scalars(select(Document).where(Document.status.in_(statuses), col >= today, col <= until))
-            for d in rows:
-                when = getattr(d, col.key)
-                out.append(Deadline(document_id=d.id, kind=kind, date=when, days_left=(when - today).days,
-                                    doc_type=d.doc_type, counterparty=d.counterparty,
-                                    document_number=d.document_number, total_amount=d.total_amount,
-                                    currency=d.currency, status=d.status))
-        return sorted(out, key=lambda x: (x.date, x.document_id))
+        """Payment deadlines (due_date) and expiries (valid_until), soonest first."""
+        try:
+            offsets = {int(x) for x in days_left.split(",") if x.strip()} if days_left else None
+        except ValueError:
+            raise HTTPException(422, "days_left must be comma-separated integers")
+        return query_deadlines(db, today or date.today(), within_days, past_days, include_unverified,
+                               days_left=offsets)
+
+    @app.post("/ask", response_model=AskOut, dependencies=[Depends(auth)])
+    def ask(body: AskIn, db: Session = Depends(get_db), agent: Agent = Depends(get_agent)):
+        """Q&A over stored documents: Claude with tools search_documents and list_deadlines."""
+        r = agent.ask(body.question, body.today)
+        db.add(AgentRun(question=body.question, answer=r.answer, chat_ref=body.chat_ref, model=r.model,
+                        served_by=r.served_by, tool_calls=r.tool_calls, turns=r.turns,
+                        input_tokens=r.usage["input_tokens"], output_tokens=r.usage["output_tokens"],
+                        cost_usd=r.cost_usd, latency_s=round(r.latency_s, 3), error=r.error))
+        db.commit()
+        return AskOut(answer=r.answer, tool_calls=r.tool_calls, turns=r.turns, usage=r.usage,
+                      cost_usd=r.cost_usd, latency_s=round(r.latency_s, 2), error=r.error)
 
     @app.get("/stats", dependencies=[Depends(auth)])
     def stats(db: Session = Depends(get_db)):
@@ -217,9 +220,14 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
             func.count(Run.id), func.coalesce(func.sum(Run.input_tokens), 0),
             func.coalesce(func.sum(Run.output_tokens), 0), func.coalesce(func.sum(Run.cost_usd), 0.0),
             func.avg(Run.latency_s), func.count(Run.error))).one()
+        an, acost, alat, aerr = db.execute(select(
+            func.count(AgentRun.id), func.coalesce(func.sum(AgentRun.cost_usd), 0.0), func.avg(AgentRun.latency_s),
+            func.count(AgentRun.error))).one()
         return {"documents": {"by_status": by_status, "by_type": {k or "unknown": v for k, v in by_type.items()}},
                 "runs": {"count": n, "errors": errs, "input_tokens": tin, "output_tokens": tout,
-                         "cost_usd": round(cost, 4), "avg_latency_s": round(lat or 0.0, 2)}}
+                         "cost_usd": round(cost, 4), "avg_latency_s": round(lat or 0.0, 2)},
+                "agent": {"count": an, "errors": aerr, "cost_usd": round(acost, 4),
+                          "avg_latency_s": round(alat or 0.0, 2)}}
 
     return app
 

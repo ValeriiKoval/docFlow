@@ -1,9 +1,9 @@
 {
   "id": "DocflowTgIntake1",
-  "name": "DocFlow: Telegram intake and review",
+  "name": "DocFlow: Telegram intake, review and Q&A",
   "nodes": [
     {
-      "id": "docflow-01",
+      "id": "DocflowTgIntake1-01",
       "name": "Telegram webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
@@ -17,10 +17,10 @@
         "responseMode": "onReceived",
         "options": {}
       },
-      "webhookId": "7d1c2b3a-docf-4f10-9a11-telegram0001"
+      "webhookId": "7d1c2b3a-d0cf-4f10-9a11-7e1e6a000001"
     },
     {
-      "id": "docflow-02",
+      "id": "DocflowTgIntake1-02",
       "name": "Secret ok?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -38,12 +38,12 @@
           },
           "conditions": [
             {
-              "id": "secret",
+              "id": "Secret ok?",
+              "leftValue": "={{ $json.headers['x-telegram-bot-api-secret-token'] }}",
               "operator": {
                 "type": "string",
                 "operation": "equals"
               },
-              "leftValue": "={{ $json.headers['x-telegram-bot-api-secret-token'] }}",
               "rightValue": "={{ $env.TELEGRAM_WEBHOOK_SECRET }}"
             }
           ],
@@ -53,7 +53,7 @@
       }
     },
     {
-      "id": "docflow-03",
+      "id": "DocflowTgIntake1-03",
       "name": "Parse update",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -62,32 +62,78 @@
         300
       ],
       "parameters": {
-        "jsCode": "// Classify a Telegram update into one route for the Switch node.\n// kinds: file | review | fix_prompt | correction | help | ignore\nconst body = $input.first().json.body || {};\nconst msg = body.message;\nconst cq = body.callback_query;\nconst out = { kind: 'ignore', update_id: body.update_id };\n\nconst who = (u) => (u && (u.username || [u.first_name, u.last_name].filter(Boolean).join(' ') || String(u.id))) || null;\n\nif (cq) {\n  const [action, id] = String(cq.data || '').split(':');\n  Object.assign(out, {\n    chat_id: cq.message.chat.id,\n    message_id: cq.message.message_id,\n    callback_id: cq.id,\n    doc_id: Number(id),\n    action,\n    reviewer: who(cq.from),\n  });\n  if (action === 'fix') out.kind = 'fix_prompt';\n  else if (action === 'approve' || action === 'reject') out.kind = 'review';\n} else if (msg) {\n  Object.assign(out, { chat_id: msg.chat.id, message_id: msg.message_id, reviewer: who(msg.from) });\n  const replied = msg.reply_to_message && msg.reply_to_message.text;\n  const ref = replied && replied.match(/#(\\d+)/);\n  if (msg.document) {\n    Object.assign(out, { kind: 'file', file_id: msg.document.file_id, file_name: msg.document.file_name || null });\n  } else if (msg.photo && msg.photo.length) {\n    // Telegram sends several sizes; the last one is the largest\n    Object.assign(out, { kind: 'file', file_id: msg.photo[msg.photo.length - 1].file_id, file_name: null });\n  } else if (ref && (msg.text || '').includes('=')) {\n    // reply to \"✏️ Correcting document #12\" with lines \"field=value\"\n    const fields = {};\n    for (const line of msg.text.split('\\n')) {\n      const m = line.match(/^\\s*([a-z_]+)\\s*=\\s*(.*?)\\s*$/);\n      if (m) fields[m[1]] = m[2] === '' || m[2].toLowerCase() === 'null' ? null : m[2];\n    }\n    Object.assign(out, { kind: 'correction', doc_id: Number(ref[1]), action: 'correct', fields });\n  } else {\n    out.kind = 'help';\n  }\n}\nreturn [{ json: out }];\n"
+        "jsCode": "// Classify a Telegram update into one route for the Switch node.\n// kinds: file | review | fix_prompt | correction | question | help | ignore\nconst body = $input.first().json.body || {};\nconst msg = body.message;\nconst cq = body.callback_query;\nconst out = { kind: 'ignore', update_id: body.update_id };\n\nconst who = (u) => (u && (u.username || [u.first_name, u.last_name].filter(Boolean).join(' ') || String(u.id))) || null;\nconst COMMANDS = {\n  '/deadlines': 'Which payments and document expiry dates fall within the next 30 days? And are there overdue payments from the last 30 days?',\n};\n\nif (cq) {\n  const [action, id] = String(cq.data || '').split(':');\n  Object.assign(out, {\n    chat_id: cq.message.chat.id,\n    message_id: cq.message.message_id,\n    callback_id: cq.id,\n    doc_id: Number(id),\n    action,\n    reviewer: who(cq.from),\n  });\n  if (action === 'fix') out.kind = 'fix_prompt';\n  else if (action === 'approve' || action === 'reject') out.kind = 'review';\n} else if (msg) {\n  Object.assign(out, { chat_id: msg.chat.id, message_id: msg.message_id, reviewer: who(msg.from) });\n  const text = (msg.text || '').trim();\n  const command = text.startsWith('/') ? text.split(/[\\s@]/)[0].toLowerCase() : null;\n  const replied = msg.reply_to_message && msg.reply_to_message.text;\n  const ref = replied && replied.match(/#(\\d+)/);\n  if (msg.document) {\n    Object.assign(out, { kind: 'file', file_id: msg.document.file_id, file_name: msg.document.file_name || null });\n  } else if (msg.photo && msg.photo.length) {\n    // Telegram sends several sizes; the last one is the largest\n    Object.assign(out, { kind: 'file', file_id: msg.photo[msg.photo.length - 1].file_id, file_name: null });\n  } else if (ref && text.includes('=')) {\n    // reply to \"✏️ Correcting document #12\" with lines \"field=value\"\n    const fields = {};\n    for (const line of text.split('\\n')) {\n      const m = line.match(/^\\s*([a-z_]+)\\s*=\\s*(.*?)\\s*$/);\n      if (m) fields[m[1]] = m[2] === '' || m[2].toLowerCase() === 'null' ? null : m[2];\n    }\n    Object.assign(out, { kind: 'correction', doc_id: Number(ref[1]), action: 'correct', fields });\n  } else if (command && COMMANDS[command]) {\n    Object.assign(out, { kind: 'question', question: COMMANDS[command] });\n  } else if (text && !command) {\n    Object.assign(out, { kind: 'question', question: text.slice(0, 1000) });\n  } else {\n    out.kind = 'help';   // /start, /help, stickers, voice, ...\n  }\n}\nreturn [{ json: out }];\n"
       }
     },
     {
-      "id": "docflow-04",
-      "name": "Route",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
+      "id": "DocflowTgIntake1-04",
+      "name": "Chat allowed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
         660,
         300
       ],
       "parameters": {
-        "mode": "expression",
-        "numberOutputs": 6,
-        "output": "={{ {\"file\": 0, \"review\": 1, \"fix_prompt\": 2, \"correction\": 3, \"help\": 4, \"ignore\": 5}[$json.kind] ?? 5 }}",
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "Chat allowed?",
+              "leftValue": "={{ !$env.TELEGRAM_ALLOWED_CHAT_IDS || $env.TELEGRAM_ALLOWED_CHAT_IDS.split(',').map(s => s.trim()).includes(String($json.chat_id)) }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
         "options": {}
       }
     },
     {
-      "id": "docflow-05",
+      "id": "DocflowTgIntake1-05",
+      "name": "Access denied",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        800
+      ],
+      "parameters": {
+        "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// Chat not in TELEGRAM_ALLOWED_CHAT_IDS: tell the user their chat id so the owner can allow it.\nconst u = $('Parse update').first().json;\nif (!u.chat_id) return [];\nconst out = [];\nif (u.callback_id) out.push(answer(u.callback_id, 'No access'));\nout.push(send(u.chat_id, `⛔ This chat has no access to DocFlow.\\nChat ID: <code>${esc(u.chat_id)}</code>. Ask the administrator to add it to TELEGRAM_ALLOWED_CHAT_IDS.`));\nreturn out;\n"
+      }
+    },
+    {
+      "id": "DocflowTgIntake1-06",
+      "name": "Route",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        300
+      ],
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 7,
+        "output": "={{ {\"file\": 0, \"review\": 1, \"fix_prompt\": 2, \"correction\": 3, \"question\": 4, \"help\": 5, \"ignore\": 6}[$json.kind] ?? 6 }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "DocflowTgIntake1-07",
       "name": "Telegram getFile",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        900,
+        1120,
         0
       ],
       "parameters": {
@@ -105,12 +151,12 @@
       }
     },
     {
-      "id": "docflow-06",
+      "id": "DocflowTgIntake1-08",
       "name": "Download file",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1120,
+        1340,
         0
       ],
       "parameters": {
@@ -126,12 +172,12 @@
       }
     },
     {
-      "id": "docflow-07",
+      "id": "DocflowTgIntake1-09",
       "name": "POST /extract",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1340,
+        1560,
         0
       ],
       "parameters": {
@@ -177,12 +223,12 @@
       }
     },
     {
-      "id": "docflow-08",
+      "id": "DocflowTgIntake1-10",
       "name": "Format result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1560,
+        1780,
         0
       ],
       "parameters": {
@@ -190,12 +236,12 @@
       }
     },
     {
-      "id": "docflow-09",
+      "id": "DocflowTgIntake1-11",
       "name": "POST review",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        900,
+        1120,
         200
       ],
       "parameters": {
@@ -224,13 +270,13 @@
       }
     },
     {
-      "id": "docflow-10",
+      "id": "DocflowTgIntake1-12",
       "name": "POST correction",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        900,
-        500
+        1120,
+        400
       ],
       "parameters": {
         "options": {
@@ -258,12 +304,12 @@
       }
     },
     {
-      "id": "docflow-11",
+      "id": "DocflowTgIntake1-13",
       "name": "Format review",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1560,
+        1780,
         300
       ],
       "parameters": {
@@ -271,38 +317,99 @@
       }
     },
     {
-      "id": "docflow-12",
+      "id": "DocflowTgIntake1-14",
       "name": "Fix prompt",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1560,
-        400
+        1780,
+        450
       ],
       "parameters": {
         "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// ✏️ pressed: ask the reviewer to reply with \"field=value\" lines (force_reply keeps the thread).\nconst u = $('Parse update').first().json;\nconst text = [\n  `✏️ Correcting document #${u.doc_id}.`,\n  'Reply to this message with <code>field=value</code> lines, for example:',\n  '<code>total_amount=1516.40</code>',\n  '<code>due_date=2026-03-19</code>',\n  '',\n  'Fields: doc_type, counterparty, recipient, document_number, issue_date, currency, total_amount, due_date, valid_from, valid_until. An empty value or null clears the field.',\n].join('\\n');\nreturn [answer(u.callback_id, 'Waiting for the correction'), send(u.chat_id, text, { reply_markup: { force_reply: true } })];\n"
       }
     },
     {
-      "id": "docflow-13",
+      "id": "DocflowTgIntake1-15",
+      "name": "Typing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        550
+      ],
+      "parameters": {
+        "jsCode": "// Show \"typing…\" while the agent works (answers take a few seconds).\nconst u = $('Parse update').first().json;\nreturn [{ json: { method: 'sendChatAction', payload: { chat_id: u.chat_id, action: 'typing' } } }];\n"
+      }
+    },
+    {
+      "id": "DocflowTgIntake1-16",
+      "name": "POST /ask",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1340,
+        650
+      ],
+      "parameters": {
+        "options": {
+          "timeout": 120000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        },
+        "method": "POST",
+        "url": "={{ $env.DOCFLOW_API_URL }}/ask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $env.SERVICE_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({question: $json.question, chat_ref: String($json.chat_id)}) }}"
+      }
+    },
+    {
+      "id": "DocflowTgIntake1-17",
+      "name": "Format answer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1780,
+        650
+      ],
+      "parameters": {
+        "jsCode": "// After POST /ask: send the agent's answer as plain text (Claude is asked for plain text, so no HTML escaping issues).\nconst u = $('Parse update').first().json;\nconst r = $input.first().json;\nconst text = r.statusCode === 200\n  ? String(r.body.answer || '').slice(0, 4000) || 'No answer found.'\n  : `❌ Could not get an answer (${r.statusCode || 'error'}).`;\nreturn [{ json: { method: 'sendMessage', payload: { chat_id: u.chat_id, text, reply_to_message_id: u.message_id } } }];\n"
+      }
+    },
+    {
+      "id": "DocflowTgIntake1-18",
       "name": "Help",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1560,
-        600
+        1780,
+        750
       ],
       "parameters": {
-        "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// Any other message (/start, text): short instructions.\nconst u = $('Parse update').first().json;\nconst text = [\n  '👋 <b>DocFlow AI</b>: incoming document intake.',\n  '',\n  'Send a PDF or a photo of an invoice, contract, insurance policy, receipt or utility bill.',\n  'I will recognise the type, counterparty, amount, dates and number, save the document and remind you of deadlines.',\n  'If I am not sure about something, I will ask you to check it with the ✅ / ✏️ / 🗑 buttons.',\n].join('\\n');\nreturn [send(u.chat_id, text)];\n"
+        "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// /start, /help and anything that is not a file or a question: short instructions.\nconst u = $('Parse update').first().json;\nconst text = [\n  '👋 <b>DocFlow AI</b>: incoming document intake.',\n  '',\n  '📎 Send a PDF or a photo of an invoice, contract, insurance policy, receipt or utility bill. I will recognise the type, counterparty, amount, dates and number and save the document.',\n  'If I am not sure about something, I will ask you to check it with the ✅ / ✏️ / 🗑 buttons.',\n  '',\n  '💬 Ask in plain text, for example: \"When does the insurance expire?\" or \"How much did we pay Kappa IT this year?\"',\n  '⏰ /deadlines: upcoming deadlines. Every morning at 9:00 I remind you of payments and of expiring policies and contracts (7, 3 and 1 day before and on the day).',\n].join('\\n');\nreturn [send(u.chat_id, text)];\n"
       }
     },
     {
-      "id": "docflow-14",
+      "id": "DocflowTgIntake1-19",
       "name": "Telegram API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1800,
+        2020,
         300
       ],
       "parameters": {
@@ -349,7 +456,25 @@
       "main": [
         [
           {
+            "node": "Chat allowed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat allowed?": {
+      "main": [
+        [
+          {
             "node": "Route",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Access denied",
             "type": "main",
             "index": 0
           }
@@ -382,6 +507,18 @@
         [
           {
             "node": "POST correction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Typing",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "POST /ask",
             "type": "main",
             "index": 0
           }
@@ -450,6 +587,17 @@
         ]
       ]
     },
+    "POST /ask": {
+      "main": [
+        [
+          {
+            "node": "Format answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Format result": {
       "main": [
         [
@@ -483,7 +631,40 @@
         ]
       ]
     },
+    "Typing": {
+      "main": [
+        [
+          {
+            "node": "Telegram API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format answer": {
+      "main": [
+        [
+          {
+            "node": "Telegram API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Help": {
+      "main": [
+        [
+          {
+            "node": "Telegram API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Access denied": {
       "main": [
         [
           {
@@ -496,12 +677,12 @@
     }
   },
   "active": false,
+  "pinData": {},
+  "tags": [],
   "settings": {
     "executionOrder": "v1",
     "saveDataSuccessExecution": "all",
     "saveManualExecutions": true,
     "timezone": "Europe/Kyiv"
-  },
-  "pinData": {},
-  "tags": []
+  }
 }

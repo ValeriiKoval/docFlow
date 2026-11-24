@@ -71,6 +71,29 @@ The pipeline (stage 4) uses `CONFIDENCE_THRESHOLD=0.6`.
 
 1,203 API calls (1,200 plus a 3-document smoke test), about **$9** in total. Sonnet runs cost ~$2.1–2.4 per 200 documents, Haiku ~$0.14.
 
+## Q&A agent (stage 5)
+
+[qa_eval.py](qa_eval.py) loads the 50 test documents from their labels into a temporary database and asks 13 generated questions:
+- 9 exact facts in pl / en: policy expiry, amount and due date by document number, contract value and party;
+- 2 lists: payments due in 14 days, policies and contracts expiring within a month;
+- 1 count;
+- 1 question about a company that is not in the database, which must not get an invented date.
+
+"Today" is set to a day when both lists are non-empty.
+
+| Agent model | Passed | Cost / answer | Avg latency |
+|---|---|---|---|
+| Sonnet 5.5 (effort low) | 13/13 | $0.009 | 4.0 s |
+| Haiku 5.5 (effort low) | 12/13 | $0.0006 | 3.7 s |
+
+Answers and tool calls are in [results/qa_claude-sonnet-5-5.md](results/qa_claude-sonnet-5-5.md) and [results/qa_claude-haiku-5-5.md](results/qa_claude-haiku-5-5.md).
+
+The first version of the eval exposed two problems, both fixed:
+- **Empty lists:** the list questions had no expected documents, so they passed trivially. The eval now picks a day with non-empty windows.
+- **Counting:** the agent counted receipts by hand and answered "8… actually 9". `search_documents` now returns the total `count`, and the eval requires the first number stated to be correct.
+
+Haiku misses one question: for the company that is not in the database it kept searching until the turn limit and returned the fallback "could not find an answer". It invented no date, but it also gave no clear "not found". It answers every fact, list and count question correctly at 1/15 of the cost, so **the agent runs on Haiku 5.5 by default** (`DOCFLOW_AGENT_MODEL`). Haiku's weak spot is heavy scans, but the agent only reads data that is already extracted. Extraction stays on Sonnet 5.5. With 13 questions the eval is small: switch back to Sonnet with one env var if real questions turn out harder.
+
 ## Limitations
 
 - Synthetic, single-page, machine-generated documents. Real scans (photos, handwriting, multi-page contracts) will be harder.

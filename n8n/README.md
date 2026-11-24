@@ -1,64 +1,93 @@
-# n8n workflow: Telegram intake and review
+# n8n workflows
 
-[docflow_telegram.json](docflow_telegram.json) is the importable workflow, **DocFlow: Telegram intake and review** (14 nodes):
+Two importable workflows, built from [code/](code/) by [build_workflow.py](build_workflow.py):
+
+**[docflow_telegram.json](docflow_telegram.json): DocFlow: Telegram intake, review and Q&A** (19 nodes)
 
 ```
-Telegram ─► Webhook /webhook/telegram ─► Secret ok? ─► Parse update ─► Route
+Telegram ─► Webhook /webhook/telegram ─► Secret ok? ─► Parse update ─► Chat allowed? ─┬─► Route
+                                                                                     └─► Access denied
    file        ─► getFile ─► download ─► POST /extract ─► Format result ─────────────┐
    review      ─► POST /documents/{id}/review (approve | reject) ─► Format review ─┤
    fix_prompt  ─► Fix prompt (asks for "field=value", force_reply) ───────────────┤
    correction  ─► POST /documents/{id}/review (correct) ─► Format review ─────────┤
+   question    ─► Typing ; POST /ask (Q&A agent) ─► Format answer ────────────────┤
    help        ─► Help ───────────────────────────────────────────────────────────┴─► Telegram API
 ```
 
-What the bot does:
-- **Auto-accepted** (confidence ≥ 0.6, no rule violations): ✅ plus a summary of the fields.
-- **Needs review**: ⚠️ plus the reasons and three buttons: **✅ Approve**, **✏️ Correct**, **🗑 Reject**.
-  - ✏️ asks the reviewer to reply with lines such as `total_amount=1516.40`. The reply is saved as a correction, and the service validates it again.
-  - ✅ and 🗑 save the decision with the reviewer's username and remove the buttons.
-- **Duplicates**: the bot answers from the database, with no new Claude call.
-- **Failed extraction** (API or schema error): ❌, with buttons to enter the fields manually or reject the document.
+**[docflow_reminders.json](docflow_reminders.json): DocFlow: deadline reminders** (6 nodes)
+
+```
+Every day 09:00 (Kyiv) ──────────────────────────────┐
+Webhook /webhook/reminders/run ─► X-API-Key ok? ────┴─► GET /deadlines?within_days=7&days_left=7,3,1,0
+   ─► Format reminders (one message per Telegram chat the documents came from) ─► Telegram API
+```
+
+## What the bot does
+
+- **📎 Documents** (PDF or photo):
+  - auto-accepted (confidence ≥ 0.6, no rule violations): ✅ plus a summary of the fields;
+  - needs review: ⚠️ plus the reasons and three buttons: **✅ Approve**, **✏️ Correct**, **🗑 Reject**;
+    - ✏️ asks the reviewer to reply with lines such as `total_amount=1516.40`; the service validates the correction again;
+    - ✅ and 🗑 save the decision with the reviewer's username and remove the buttons;
+  - duplicates are answered from the database, with no new Claude call;
+  - a failed extraction gets ❌, with buttons to enter the fields manually or reject the document.
+- **💬 Questions** in plain text ("When does the insurance expire?", "How much do we owe Kappa IT?") go to the Q&A agent (`POST /ask`). While it works, the bot shows "typing…". `/deadlines` asks for the next 30 days plus overdue payments.
+- **⏰ Reminders:** every morning at 09:00, for payments due and policies or contracts expiring in 7, 3 or 1 days, or today. Each reminder goes to the chat the document was sent from. Documents not yet reviewed are marked ⚠️.
+- **⛔ Access:** only chats in `TELEGRAM_ALLOWED_CHAT_IDS` are served. Any other chat gets its chat id and no data.
 
 ## Design choices
 
-- **Webhook node + Bot API over HTTP**, instead of n8n's Telegram nodes. Everything is configured through environment variables, so the workflow imports and runs with no credentials set up in the UI. It is also testable against a mock Bot API (`TELEGRAM_API_BASE`).
-- **Webhook secret:** Telegram sends `X-Telegram-Bot-Api-Secret-Token`. Calls without the right value are dropped at the second node.
-- **No business logic in n8n:** validation, dedup, storage and the review state machine live in the service. n8n only routes events and formats messages, so the same API can serve email or Drive intake later.
-- **Code-node sources** are in [code/](code/) as plain JavaScript. [build_workflow.py](build_workflow.py) assembles the JSON. If you edit the workflow in the n8n UI, export it back over the JSON.
+- **Webhook node + Bot API over HTTP**, instead of n8n's Telegram nodes. All settings come from environment variables, so the workflows import and run with no credentials set up in the UI. They are also testable against a mock Bot API (`TELEGRAM_API_BASE`).
+- **Security:**
+  - Telegram sends the `X-Telegram-Bot-Api-Secret-Token` header; calls without the right value are dropped at the second node;
+  - only chats on the allowlist are served;
+  - the manual reminders webhook requires the service API key.
+- **No business logic in n8n:** validation, dedup, storage, the review state machine, deadline queries and the agent live in the service. n8n only routes events, schedules jobs and formats messages.
+- **Code-node sources** are plain JavaScript in [code/](code/). If you edit a workflow in the n8n UI, export it back over the JSON.
 
 ## Run
 
-`docker compose up -d` from the repo root starts Postgres, the API and n8n. A one-shot `n8n-import` container imports and publishes this workflow on every start, so the JSON in git is what runs.
+`docker compose up -d` from the repo root starts Postgres, the API and n8n. A one-shot `n8n-import` container imports and publishes both workflows on every start, so the JSON in git is what runs.
 
 ### With a real bot
 
-1. Create a bot with @BotFather and put the token in `.env` as `TELEGRAM_BOT_TOKEN`. `TELEGRAM_WEBHOOK_SECRET` and `SERVICE_API_KEY` are random strings; any long values will do.
-2. Telegram needs a public HTTPS URL. Locally, start a Cloudflare quick tunnel (no account needed):
+1. Create a bot with @BotFather and put the token in `.env` as `TELEGRAM_BOT_TOKEN`.
+   - `TELEGRAM_WEBHOOK_SECRET` and `SERVICE_API_KEY` are random strings (`A-Z a-z 0-9 _ -`).
+   - `TELEGRAM_ALLOWED_CHAT_IDS` is your chat id. If you don't know it, the bot tells you when access is denied.
+2. Telegram needs a public HTTPS URL. Locally, start a Cloudflare quick tunnel (no account needed), then register the webhook:
    ```
    docker compose --profile tunnel up -d
    python n8n/set_webhook.py          # finds the tunnel URL in the logs, calls setWebhook
    ```
-   On a server, use `python n8n/set_webhook.py --url https://your-n8n-host` instead.
-3. Send the bot a PDF or a photo of a document.
+   The quick-tunnel URL changes every time the tunnel restarts; run `set_webhook.py` again after that. On a server, use `python n8n/set_webhook.py --url https://your-n8n-host` instead.
+3. Send the bot a PDF or a photo of a document, or ask it a question.
 
 `python n8n/set_webhook.py --info` shows the webhook status and the last delivery error.
+
+To send reminders now, as of a given day (for demos):
+
+```
+curl -X POST localhost:5678/webhook/reminders/run -H "X-API-Key: $SERVICE_API_KEY" -H "Content-Type: application/json" -d '{"today": "2026-04-01"}'
+```
 
 ### Offline test (no bot, no tunnel)
 
 ```
 python n8n/mock_telegram.py --root eval/dataset_test        # mock Bot API on :8081
-TELEGRAM_API_BASE=http://host.docker.internal:8081 TELEGRAM_BOT_TOKEN=123:mock docker compose up -d
+TELEGRAM_API_BASE=http://host.docker.internal:8081 TELEGRAM_BOT_TOKEN=123:mock TELEGRAM_ALLOWED_CHAT_IDS=555 docker compose up -d
 python n8n/test_workflow.py
 ```
 
-The test posts fake Telegram updates to the webhook and checks the bot's replies:
+The test posts fake Telegram updates to the webhooks and checks what the bot sends:
 - a wrong secret is ignored;
 - `/start` returns help;
-- a clean PDF is auto-accepted;
-- a poor scan goes to review with buttons;
-- ✏️ followed by a reply saves a correction;
-- ✅ approves the document and removes the buttons.
+- a clean PDF is auto-accepted; a poor scan goes to review with buttons;
+- ✏️ followed by a reply saves a correction; ✅ approves the document and removes the buttons;
+- a question gets a typing indicator and an answer with the right amount and due date; `/deadlines` gets an answer;
+- a chat that is not on the allowlist is refused;
+- reminders reach the right chat, and the reminders webhook rejects a wrong key.
 
-The test uses the real API service and Claude: about 2 calls, ~$0.03.
+It uses the real API service and Claude, ~$0.05 per run.
 
 The n8n UI is at http://localhost:5678. On first visit it asks you to create a local owner account.

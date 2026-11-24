@@ -85,6 +85,26 @@ class Run(Base):
     document: Mapped[Document] = relationship(back_populates="runs")
 
 
+class AgentRun(Base):
+    """One Q&A agent answer: question, tools used, tokens, cost, latency."""
+    __tablename__ = "agent_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    question: Mapped[str] = mapped_column(Text)
+    answer: Mapped[str | None] = mapped_column(Text)
+    chat_ref: Mapped[str | None] = mapped_column(String(255))
+    model: Mapped[str] = mapped_column(String(50))
+    served_by: Mapped[str | None] = mapped_column(String(50))
+    tool_calls: Mapped[list] = mapped_column(JSON, default=list)
+    turns: Mapped[int] = mapped_column(Integer, default=0)
+    input_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    output_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    cost_usd: Mapped[float] = mapped_column(Float, default=0.0)
+    latency_s: Mapped[float] = mapped_column(Float, default=0.0)
+    error: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 def make_sessionmaker(database_url: str):
     kwargs = {}
     if database_url.startswith("sqlite"):
