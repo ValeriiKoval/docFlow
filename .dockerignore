@@ -1,0 +1,9 @@
+.git
+.env
+data
+eval
+docs
+n8n
+**/__pycache__
+**/*.pyc
+.claude

@@ -1,0 +1,90 @@
+# DocFlow AI: Postgres + extraction API + n8n.
+#
+#   cp .env.example .env            # fill ANTHROPIC_API_KEY, SERVICE_API_KEY, TELEGRAM_*
+#   docker compose up -d --build
+#   API docs: http://localhost:8000/docs      n8n: http://localhost:5678
+#
+# Telegram needs a public HTTPS URL for its webhook. For local runs:
+#   docker compose --profile tunnel up -d     # Cloudflare quick tunnel to n8n
+#   python n8n/set_webhook.py                 # registers <tunnel>/webhook/telegram with Telegram
+name: docflow
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: docflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-docflow}
+      POSTGRES_DB: docflow
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docflow -d docflow"]
+      interval: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: service/Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://docflow:${POSTGRES_PASSWORD:-docflow}@db:5432/docflow
+      STORAGE_DIR: /data/files
+    volumes:
+      - files:/data/files
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # one-shot: (re)import the workflow from n8n/docflow_telegram.json and publish it before n8n starts
+  n8n-import:
+    image: n8nio/n8n:${N8N_VERSION:-2.49.5}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - n8n import:workflow --input=/workflows/docflow_telegram.json && n8n publish:workflow --id=DocflowTgIntake1
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n:/workflows:ro
+    restart: "no"
+
+  n8n:
+    image: n8nio/n8n:${N8N_VERSION:-2.49.5}
+    environment:
+      GENERIC_TIMEZONE: ${TZ:-Europe/Kyiv}
+      TZ: ${TZ:-Europe/Kyiv}
+      N8N_SECURE_COOKIE: "false"                 # local http UI
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"      # workflows read the settings below via $env
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      DOCFLOW_API_URL: http://api:8000
+      SERVICE_API_KEY: ${SERVICE_API_KEY:?set SERVICE_API_KEY in .env}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_WEBHOOK_SECRET: ${TELEGRAM_WEBHOOK_SECRET:-}
+      TELEGRAM_API_BASE: ${TELEGRAM_API_BASE:-https://api.telegram.org}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n:/workflows:ro
+    ports:
+      - "5678:5678"
+    depends_on:
+      api:
+        condition: service_healthy
+      n8n-import:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  tunnel:
+    profiles: ["tunnel"]
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --url http://n8n:5678
+    depends_on: [n8n]
+
+volumes:
+  pgdata:
+  files:
+  n8n_data:

@@ -1,0 +1,507 @@
+{
+  "id": "DocflowTgIntake1",
+  "name": "DocFlow: Telegram intake and review",
+  "nodes": [
+    {
+      "id": "docflow-01",
+      "name": "Telegram webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "webhookId": "7d1c2b3a-docf-4f10-9a11-telegram0001"
+    },
+    {
+      "id": "docflow-02",
+      "name": "Secret ok?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "secret",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.headers['x-telegram-bot-api-secret-token'] }}",
+              "rightValue": "={{ $env.TELEGRAM_WEBHOOK_SECRET }}"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "docflow-03",
+      "name": "Parse update",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Classify a Telegram update into one route for the Switch node.\n// kinds: file | review | fix_prompt | correction | help | ignore\nconst body = $input.first().json.body || {};\nconst msg = body.message;\nconst cq = body.callback_query;\nconst out = { kind: 'ignore', update_id: body.update_id };\n\nconst who = (u) => (u && (u.username || [u.first_name, u.last_name].filter(Boolean).join(' ') || String(u.id))) || null;\n\nif (cq) {\n  const [action, id] = String(cq.data || '').split(':');\n  Object.assign(out, {\n    chat_id: cq.message.chat.id,\n    message_id: cq.message.message_id,\n    callback_id: cq.id,\n    doc_id: Number(id),\n    action,\n    reviewer: who(cq.from),\n  });\n  if (action === 'fix') out.kind = 'fix_prompt';\n  else if (action === 'approve' || action === 'reject') out.kind = 'review';\n} else if (msg) {\n  Object.assign(out, { chat_id: msg.chat.id, message_id: msg.message_id, reviewer: who(msg.from) });\n  const replied = msg.reply_to_message && msg.reply_to_message.text;\n  const ref = replied && replied.match(/#(\\d+)/);\n  if (msg.document) {\n    Object.assign(out, { kind: 'file', file_id: msg.document.file_id, file_name: msg.document.file_name || null });\n  } else if (msg.photo && msg.photo.length) {\n    // Telegram sends several sizes; the last one is the largest\n    Object.assign(out, { kind: 'file', file_id: msg.photo[msg.photo.length - 1].file_id, file_name: null });\n  } else if (ref && (msg.text || '').includes('=')) {\n    // reply to \"✏️ Correcting document #12\" with lines \"field=value\"\n    const fields = {};\n    for (const line of msg.text.split('\\n')) {\n      const m = line.match(/^\\s*([a-z_]+)\\s*=\\s*(.*?)\\s*$/);\n      if (m) fields[m[1]] = m[2] === '' || m[2].toLowerCase() === 'null' ? null : m[2];\n    }\n    Object.assign(out, { kind: 'correction', doc_id: Number(ref[1]), action: 'correct', fields });\n  } else {\n    out.kind = 'help';\n  }\n}\nreturn [{ json: out }];\n"
+      }
+    },
+    {
+      "id": "docflow-04",
+      "name": "Route",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        660,
+        300
+      ],
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 6,
+        "output": "={{ {\"file\": 0, \"review\": 1, \"fix_prompt\": 2, \"correction\": 3, \"help\": 4, \"ignore\": 5}[$json.kind] ?? 5 }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "docflow-05",
+      "name": "Telegram getFile",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        0
+      ],
+      "parameters": {
+        "options": {},
+        "url": "={{ $env.TELEGRAM_API_BASE }}/bot{{ $env.TELEGRAM_BOT_TOKEN }}/getFile",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "file_id",
+              "value": "={{ $json.file_id }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "docflow-06",
+      "name": "Download file",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        0
+      ],
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        },
+        "url": "={{ $env.TELEGRAM_API_BASE }}/file/bot{{ $env.TELEGRAM_BOT_TOKEN }}/{{ $json.result.file_path }}"
+      }
+    },
+    {
+      "id": "docflow-07",
+      "name": "POST /extract",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1340,
+        0
+      ],
+      "parameters": {
+        "options": {
+          "timeout": 180000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        },
+        "method": "POST",
+        "url": "={{ $env.DOCFLOW_API_URL }}/extract",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $env.SERVICE_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "source",
+              "value": "telegram"
+            },
+            {
+              "name": "source_ref",
+              "value": "={{ $('Parse update').first().json.chat_id }}:{{ $('Parse update').first().json.message_id }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "docflow-08",
+      "name": "Format result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// After POST /extract: reply in the chat; documents that need review get ✅ / ✏️ / 🗑 buttons.\nconst u = $('Parse update').first().json;\nconst r = $input.first().json;\nconst reply = { reply_to_message_id: u.message_id };\n\nif (r.statusCode !== 200) {\n  return [send(u.chat_id, `❌ Could not process the file (${apiError(r)})`, reply)];\n}\nconst { duplicate, document: d } = r.body;\nconst head = `<b>${esc(TYPE[d.fields?.doc_type] || 'Document')}</b> · #${d.id}`;\n\nif (duplicate) {\n  return [send(u.chat_id, `ℹ️ This file is already in the database: ${head}, status <i>${esc(d.status)}</i>.\\n\\n${summary(d)}`, reply)];\n}\nif (d.status === 'auto_accepted') {\n  return [send(u.chat_id, `✅ ${head}\\nRecognised and saved automatically (confidence ${d.confidence}).\\n\\n${summary(d)}`, reply)];\n}\nif (d.status === 'needs_review') {\n  const why = (d.issues || []).map((i) => `• ${esc(i)}`).join('\\n');\n  return [send(u.chat_id, `⚠️ ${head}\\nNeeds review:\\n${why}\\n\\n${summary(d)}`,\n    { ...reply, reply_markup: reviewKeyboard(d.id) })];\n}\n// failed: extraction error; allow manual entry or rejection\nreturn [send(u.chat_id, `❌ Document #${d.id}: could not be recognised (${esc(d.error)}).\\nYou can enter the fields manually.`,\n  { ...reply, reply_markup: reviewKeyboard(d.id, false) })];\n"
+      }
+    },
+    {
+      "id": "docflow-09",
+      "name": "POST review",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        200
+      ],
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        },
+        "method": "POST",
+        "url": "={{ $env.DOCFLOW_API_URL }}/documents/{{ $json.doc_id }}/review",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $env.SERVICE_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({action: $json.action, fields: $json.fields || {}, reviewer: $json.reviewer}) }}"
+      }
+    },
+    {
+      "id": "docflow-10",
+      "name": "POST correction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        500
+      ],
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        },
+        "method": "POST",
+        "url": "={{ $env.DOCFLOW_API_URL }}/documents/{{ $json.doc_id }}/review",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $env.SERVICE_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({action: $json.action, fields: $json.fields || {}, reviewer: $json.reviewer}) }}"
+      }
+    },
+    {
+      "id": "docflow-11",
+      "name": "Format review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// After POST /documents/{id}/review: confirm in the chat and remove the buttons from the reviewed message.\nconst u = $('Parse update').first().json;\nconst r = $input.first().json;\nconst out = [];\nconst ok = r.statusCode === 200;\n\nif (u.callback_id) {\n  out.push(answer(u.callback_id, ok ? 'Saved' : 'Error'));\n  if (ok) {\n    out.push({ json: { method: 'editMessageReplyMarkup',\n      payload: { chat_id: u.chat_id, message_id: u.message_id, reply_markup: { inline_keyboard: [] } } } });\n  }\n}\nif (!ok) {\n  out.push(send(u.chat_id, `❌ Document #${u.doc_id}: ${apiError(r)}`));\n  return out;\n}\nconst d = r.body;\nconst by = d.reviewed_by ? ` (${esc(d.reviewed_by)})` : '';\nconst text = {\n  approved: `✅ Document #${d.id} approved${by}.`,\n  rejected: `🗑 Document #${d.id} rejected${by}.`,\n  corrected: `✏️ Document #${d.id} corrected${by}.\\n\\n${summary(d)}`,\n}[d.status] || `Document #${d.id}: ${esc(d.status)}`;\nconst warn = d.status === 'corrected' && d.issues?.length\n  ? `\\n\\n⚠️ Please note:\\n${d.issues.map((i) => `• ${esc(i)}`).join('\\n')}` : '';\nout.push(send(u.chat_id, text + warn));\nreturn out;\n"
+      }
+    },
+    {
+      "id": "docflow-12",
+      "name": "Fix prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        400
+      ],
+      "parameters": {
+        "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// ✏️ pressed: ask the reviewer to reply with \"field=value\" lines (force_reply keeps the thread).\nconst u = $('Parse update').first().json;\nconst text = [\n  `✏️ Correcting document #${u.doc_id}.`,\n  'Reply to this message with <code>field=value</code> lines, for example:',\n  '<code>total_amount=1516.40</code>',\n  '<code>due_date=2026-03-19</code>',\n  '',\n  'Fields: doc_type, counterparty, recipient, document_number, issue_date, currency, total_amount, due_date, valid_from, valid_until. An empty value or null clears the field.',\n].join('\\n');\nreturn [answer(u.callback_id, 'Waiting for the correction'), send(u.chat_id, text, { reply_markup: { force_reply: true } })];\n"
+      }
+    },
+    {
+      "id": "docflow-13",
+      "name": "Help",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        600
+      ],
+      "parameters": {
+        "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// Any other message (/start, text): short instructions.\nconst u = $('Parse update').first().json;\nconst text = [\n  '👋 <b>DocFlow AI</b>: incoming document intake.',\n  '',\n  'Send a PDF or a photo of an invoice, contract, insurance policy, receipt or utility bill.',\n  'I will recognise the type, counterparty, amount, dates and number, save the document and remind you of deadlines.',\n  'If I am not sure about something, I will ask you to check it with the ✅ / ✏️ / 🗑 buttons.',\n].join('\\n');\nreturn [send(u.chat_id, text)];\n"
+      }
+    },
+    {
+      "id": "docflow-14",
+      "name": "Telegram API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        300
+      ],
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        },
+        "method": "POST",
+        "url": "={{ $env.TELEGRAM_API_BASE }}/bot{{ $env.TELEGRAM_BOT_TOKEN }}/{{ $json.method }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.payload) }}"
+      }
+    }
+  ],
+  "connections": {
+    "Telegram webhook": {
+      "main": [
+        [
+          {
+            "node": "Secret ok?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Secret ok?": {
+      "main": [
+        [
+          {
+            "node": "Parse update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse update": {
+      "main": [
+        [
+          {
+            "node": "Route",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route": {
+      "main": [
+        [
+          {
+            "node": "Telegram getFile",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "POST review",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fix prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "POST correction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Help",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram getFile": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "POST /extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST /extract": {
+      "main": [
+        [
+          {
+            "node": "Format result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST review": {
+      "main": [
+        [
+          {
+            "node": "Format review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST correction": {
+      "main": [
+        [
+          {
+            "node": "Format review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format result": {
+      "main": [
+        [
+          {
+            "node": "Telegram API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format review": {
+      "main": [
+        [
+          {
+            "node": "Telegram API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix prompt": {
+      "main": [
+        [
+          {
+            "node": "Telegram API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Help": {
+      "main": [
+        [
+          {
+            "node": "Telegram API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "timezone": "Europe/Kyiv"
+  },
+  "pinData": {},
+  "tags": []
+}

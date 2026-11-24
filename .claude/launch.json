@@ -4,8 +4,28 @@
     {
       "name": "docflow-api",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "uvicorn", "docflow.main:app", "--app-dir", "service", "--port", "8000"],
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "docflow.main:app",
+        "--app-dir",
+        "service",
+        "--port",
+        "8000"
+      ],
       "port": 8000
+    },
+    {
+      "name": "mock-telegram",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "n8n/mock_telegram.py",
+        "--port",
+        "8081",
+        "--root",
+        "eval/dataset_test"
+      ],
+      "port": 8081
     }
   ]
 }
