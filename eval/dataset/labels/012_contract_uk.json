@@ -1,0 +1,26 @@
+{
+  "doc_type": "contract",
+  "language": "uk",
+  "counterparty": "ТОВ «Дніпро-Сервіс»",
+  "recipient": "Марія Прикладна",
+  "document_number": null,
+  "issue_date": "2026-08-27",
+  "currency": "UAH",
+  "total_amount": 6860.28,
+  "due_date": null,
+  "valid_from": "2026-09-01",
+  "valid_until": "2027-08-31",
+  "_meta": {
+    "file": "012_contract_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "currency_symbol",
+      "no_number",
+      "start_after_signing"
+    ],
+    "sha256": "00701de5e57f371dc41bd77a1881c873f469d63face7319c9d50a44db91253e4"
+  }
+}

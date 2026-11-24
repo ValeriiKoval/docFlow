@@ -1,0 +1,27 @@
+{
+  "doc_type": "invoice",
+  "language": "pl",
+  "counterparty": "Delta Serwis Sp. z o.o.",
+  "recipient": "Piotr Wzorcowy",
+  "document_number": "FV/2026/01/178",
+  "issue_date": "2026-01-29",
+  "currency": "PLN",
+  "total_amount": 4976.21,
+  "due_date": "2026-02-28",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "047_invoice_pl.pdf",
+    "layout": "classic",
+    "noisy": true,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "textual_date",
+      "currency_symbol",
+      "supply_date",
+      "stamp"
+    ],
+    "sha256": "869e94b4ca283216672b3d72e0e4037ea8f25ba4d08da41d35bbcc32398f2f86"
+  }
+}

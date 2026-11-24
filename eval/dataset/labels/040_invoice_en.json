@@ -1,0 +1,24 @@
+{
+  "doc_type": "invoice",
+  "language": "en",
+  "counterparty": "Adventure Works Ltd",
+  "recipient": "John Sample",
+  "document_number": "A109/2026",
+  "issue_date": "2026-03-04",
+  "currency": "GBP",
+  "total_amount": 9143.88,
+  "due_date": "2026-03-11",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "040_invoice_en.pdf",
+    "layout": "classic",
+    "noisy": true,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "stamp"
+    ],
+    "sha256": "a15ccf3816013180d32816fe66a50653f46b20d44243582d5881a998fb9fdd97"
+  }
+}

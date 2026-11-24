@@ -1,0 +1,27 @@
+{
+  "doc_type": "receipt",
+  "language": "uk",
+  "counterparty": "ТОВ «Продмаркет Тест»",
+  "recipient": null,
+  "document_number": null,
+  "issue_date": "2025-01-30",
+  "currency": "UAH",
+  "total_amount": 780.86,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "022_receipt_uk.pdf",
+    "layout": "receipt",
+    "noisy": false,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "currency_symbol",
+      "card",
+      "no_number"
+    ],
+    "sha256": "e5a170df5782a9f86265835943807307a7729386b96c5d63f499e9561f66a8bc"
+  }
+}

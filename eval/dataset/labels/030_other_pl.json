@@ -1,0 +1,23 @@
+{
+  "doc_type": "other",
+  "language": "pl",
+  "counterparty": "Delta Serwis Sp. z o.o.",
+  "recipient": "Kancelaria Przykład",
+  "document_number": "46/2025",
+  "issue_date": "2025-12-20",
+  "currency": null,
+  "total_amount": null,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "030_other_pl.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "other_letter",
+      "textual_date"
+    ],
+    "sha256": "09877eddf2c71c1358f02ed133d36577b9e0cac6f4cd2e992613e13cbeeb3c16"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "doc_type": "insurance",
+  "language": "pl",
+  "counterparty": "Omega TU S.A.",
+  "recipient": "Piotr Wzorcowy",
+  "document_number": "PL-AC 1768805",
+  "issue_date": "2026-07-20",
+  "currency": "PLN",
+  "total_amount": 1516.4,
+  "due_date": null,
+  "valid_from": "2026-07-21",
+  "valid_until": "2027-07-20",
+  "_meta": {
+    "file": "000_insurance_pl.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "sum_insured",
+      "textual_date",
+      "installments",
+      "issue_before_start"
+    ],
+    "sha256": "d73f4323e6b2046a8652d16d37f4f419a15fdb3fa44407f184261899543fb28e"
+  }
+}

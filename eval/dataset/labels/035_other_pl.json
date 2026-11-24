@@ -1,0 +1,22 @@
+{
+  "doc_type": "other",
+  "language": "pl",
+  "counterparty": "Biuro Rachunkowe Sigma",
+  "recipient": "Kancelaria Przykład",
+  "document_number": "739/2025",
+  "issue_date": "2025-02-21",
+  "currency": null,
+  "total_amount": null,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "035_other_pl.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "other_letter"
+    ],
+    "sha256": "3f3fb9ff4a1c7798c3589f061962b825f19684bde1b61457ff3f1f5191cb04d1"
+  }
+}

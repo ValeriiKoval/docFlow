@@ -1,0 +1,24 @@
+{
+  "doc_type": "contract",
+  "language": "uk",
+  "counterparty": "ТОВ «Дніпро-Сервіс»",
+  "recipient": "ФОП Тестовий О. В.",
+  "document_number": "50/2025",
+  "issue_date": "2025-01-26",
+  "currency": "UAH",
+  "total_amount": 11922.96,
+  "due_date": null,
+  "valid_from": "2025-01-26",
+  "valid_until": "2027-01-25",
+  "_meta": {
+    "file": "007_contract_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "textual_date"
+    ],
+    "sha256": "87d2e5e1e722b1a14a2d1ec0f3a1e93aea26bc6297f2385df47fc251e90b5925"
+  }
+}

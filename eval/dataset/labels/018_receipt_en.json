@@ -1,0 +1,25 @@
+{
+  "doc_type": "receipt",
+  "language": "en",
+  "counterparty": "Acme Office Supplies",
+  "recipient": null,
+  "document_number": "38784",
+  "issue_date": "2025-04-03",
+  "currency": "EUR",
+  "total_amount": 65.64,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "018_receipt_en.pdf",
+    "layout": "receipt",
+    "noisy": false,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "card"
+    ],
+    "sha256": "6b5a62a2c259abdefc04592c519a1233a1cc2a029de5ca530ee74a8ef2f2a45f"
+  }
+}

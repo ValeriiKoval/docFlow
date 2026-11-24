@@ -1,0 +1,24 @@
+{
+  "doc_type": "insurance",
+  "language": "en",
+  "counterparty": "Contoso Insurance plc",
+  "recipient": "John Sample",
+  "document_number": "HC5746166",
+  "issue_date": "2026-06-01",
+  "currency": "EUR",
+  "total_amount": 1608.06,
+  "due_date": null,
+  "valid_from": "2026-06-15",
+  "valid_until": "2027-06-14",
+  "_meta": {
+    "file": "027_insurance_en.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "sum_insured",
+      "installments",
+      "issue_before_start"
+    ],
+    "sha256": "810202957582992acb5eaf626b494a1a2b9580495f2241f342884b2c5e097a25"
+  }
+}

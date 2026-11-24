@@ -1,0 +1,24 @@
+{
+  "doc_type": "utility_bill",
+  "language": "en",
+  "counterparty": "Northwind Utilities Ltd",
+  "recipient": "Jane Example",
+  "document_number": "114682844",
+  "issue_date": "2026-10-08",
+  "currency": "EUR",
+  "total_amount": 104.78,
+  "due_date": "2026-10-22",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "015_utility_bill_en.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban"
+    ],
+    "sha256": "8ec42172363e903d9612f5621a311da13d1ee1a0a3a9ee7ffc142dc0e841dd57"
+  }
+}

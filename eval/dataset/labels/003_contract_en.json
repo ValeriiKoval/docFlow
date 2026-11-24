@@ -1,0 +1,25 @@
+{
+  "doc_type": "contract",
+  "language": "en",
+  "counterparty": "Fabrikam Services LLC",
+  "recipient": "John Sample",
+  "document_number": null,
+  "issue_date": "2025-07-14",
+  "currency": "EUR",
+  "total_amount": 7622.7,
+  "due_date": null,
+  "valid_from": "2025-07-14",
+  "valid_until": "2026-01-13",
+  "_meta": {
+    "file": "003_contract_en.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "no_number",
+      "stamp"
+    ],
+    "sha256": "c260861f0088611b753181f57cdddd1aac71c2e15de379dca90b359cc157958b"
+  }
+}

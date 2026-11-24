@@ -1,18 +1,26 @@
 {
   "doc_type": "utility_bill",
   "language": "uk",
-  "counterparty": "ТОВ «ЛінкНет»",
-  "recipient": "John Sample",
-  "document_number": "E261/2025",
-  "issue_date": "2025-02-21",
+  "counterparty": "ТОВ «Карпатська Енергія»",
+  "recipient": "Марія Прикладна",
+  "document_number": "799552991",
+  "issue_date": "2026-08-14",
   "currency": "UAH",
-  "total_amount": 265.24,
-  "due_date": "2025-03-23",
+  "total_amount": 2534.68,
+  "due_date": "2026-08-24",
   "valid_from": null,
   "valid_until": null,
   "_meta": {
     "file": "014_utility_bill_uk.pdf",
+    "layout": "classic",
     "noisy": true,
-    "sha256": "780abb797d7aead993a214c14f59f341ab137984de02efb2db23a15fee943e53"
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "currency_symbol",
+      "stamp"
+    ],
+    "sha256": "ffad55c3a11147061cbe224daaa574c7bc79b934ab6cbe6c52eb52bd37eb3986"
   }
 }

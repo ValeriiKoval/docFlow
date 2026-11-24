@@ -1,0 +1,27 @@
+{
+  "doc_type": "receipt",
+  "language": "pl",
+  "counterparty": "Market Testowy s.c.",
+  "recipient": null,
+  "document_number": "37727",
+  "issue_date": "2025-10-09",
+  "currency": "PLN",
+  "total_amount": 23.78,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "026_receipt_pl.pdf",
+    "layout": "receipt",
+    "noisy": true,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "currency_symbol",
+      "cash_change",
+      "stamp"
+    ],
+    "sha256": "af0ebcb4f470a47a149c1cfed588a8eb117872a3981ecab661725efbded0709e"
+  }
+}

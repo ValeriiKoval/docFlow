@@ -1,41 +1,51 @@
-file,doc_type,language,noisy
-000_invoice_en.pdf,invoice,en,False
-001_contract_pl.pdf,contract,pl,True
-002_insurance_pl.pdf,insurance,pl,False
-003_receipt_uk.pdf,receipt,uk,True
-004_utility_bill_en.pdf,utility_bill,en,False
-005_invoice_en.pdf,invoice,en,False
-006_contract_en.pdf,contract,en,False
-007_insurance_en.pdf,insurance,en,True
-008_receipt_en.pdf,receipt,en,True
-009_utility_bill_en.pdf,utility_bill,en,True
-010_invoice_uk.pdf,invoice,uk,False
-011_contract_pl.pdf,contract,pl,False
-012_insurance_pl.pdf,insurance,pl,False
-013_receipt_pl.pdf,receipt,pl,False
-014_utility_bill_uk.pdf,utility_bill,uk,True
-015_invoice_uk.pdf,invoice,uk,False
-016_contract_uk.pdf,contract,uk,False
-017_insurance_pl.pdf,insurance,pl,False
-018_receipt_uk.pdf,receipt,uk,True
-019_utility_bill_en.pdf,utility_bill,en,False
-020_invoice_uk.pdf,invoice,uk,False
-021_contract_pl.pdf,contract,pl,False
-022_insurance_en.pdf,insurance,en,False
-023_receipt_uk.pdf,receipt,uk,False
-024_utility_bill_pl.pdf,utility_bill,pl,False
-025_invoice_uk.pdf,invoice,uk,False
-026_contract_pl.pdf,contract,pl,True
-027_insurance_pl.pdf,insurance,pl,False
-028_receipt_uk.pdf,receipt,uk,False
-029_utility_bill_pl.pdf,utility_bill,pl,False
-030_invoice_uk.pdf,invoice,uk,False
-031_contract_pl.pdf,contract,pl,False
-032_insurance_en.pdf,insurance,en,False
-033_receipt_en.pdf,receipt,en,False
-034_utility_bill_en.pdf,utility_bill,en,False
-035_invoice_pl.pdf,invoice,pl,False
-036_contract_pl.pdf,contract,pl,False
-037_insurance_pl.pdf,insurance,pl,False
-038_receipt_uk.pdf,receipt,uk,True
-039_utility_bill_pl.pdf,utility_bill,pl,False
+file,doc_type,language,layout,noisy,tags
+000_insurance_pl.pdf,insurance,pl,narrative,False,sum_insured textual_date installments issue_before_start
+001_insurance_en.pdf,insurance,en,boxed,False,sum_insured currency_symbol
+002_insurance_pl.pdf,insurance,pl,boxed,False,sum_insured
+003_contract_en.pdf,contract,en,narrative,True,monthly_vs_total narrative no_number stamp
+004_invoice_pl.pdf,invoice,pl,boxed,False,vat_breakdown iban supply_date
+005_other_uk.pdf,other,uk,narrative,False,other_certificate
+006_insurance_en.pdf,insurance,en,boxed,False,sum_insured issue_before_start
+007_contract_uk.pdf,contract,uk,narrative,False,monthly_vs_total narrative textual_date
+008_receipt_en.pdf,receipt,en,receipt,False,no_recipient vat_included fiscal_ids currency_symbol card
+009_contract_pl.pdf,contract,pl,narrative,False,monthly_vs_total narrative currency_symbol start_after_signing
+010_receipt_pl.pdf,receipt,pl,receipt,False,no_recipient vat_included fiscal_ids cash_change no_number
+011_insurance_uk.pdf,insurance,uk,narrative,False,sum_insured textual_date currency_symbol issue_before_start
+012_contract_uk.pdf,contract,uk,narrative,False,monthly_vs_total narrative currency_symbol no_number start_after_signing
+013_invoice_uk.pdf,invoice,uk,classic,False,vat_breakdown iban supply_date
+014_utility_bill_uk.pdf,utility_bill,uk,classic,True,account_number billing_period iban currency_symbol stamp
+015_utility_bill_en.pdf,utility_bill,en,boxed,False,account_number billing_period iban
+016_contract_pl.pdf,contract,pl,narrative,True,monthly_vs_total narrative currency_symbol no_number start_after_signing stamp
+017_insurance_uk.pdf,insurance,uk,boxed,False,sum_insured currency_symbol
+018_receipt_en.pdf,receipt,en,receipt,False,no_recipient vat_included fiscal_ids card
+019_invoice_uk.pdf,invoice,uk,boxed,True,vat_breakdown iban currency_symbol stamp
+020_utility_bill_pl.pdf,utility_bill,pl,boxed,False,account_number billing_period iban previous_balance
+021_insurance_uk.pdf,insurance,uk,narrative,True,sum_insured currency_symbol issue_before_start stamp
+022_receipt_uk.pdf,receipt,uk,receipt,False,no_recipient vat_included fiscal_ids currency_symbol card no_number
+023_other_uk.pdf,other,uk,narrative,False,other_certificate
+024_utility_bill_en.pdf,utility_bill,en,boxed,True,account_number billing_period iban overpayment stamp
+025_receipt_uk.pdf,receipt,uk,receipt,False,no_recipient vat_included fiscal_ids cash_change
+026_receipt_pl.pdf,receipt,pl,receipt,True,no_recipient vat_included fiscal_ids currency_symbol cash_change stamp
+027_insurance_en.pdf,insurance,en,narrative,False,sum_insured installments issue_before_start
+028_insurance_pl.pdf,insurance,pl,narrative,False,sum_insured issue_before_start
+029_utility_bill_uk.pdf,utility_bill,uk,classic,True,account_number billing_period iban previous_balance stamp
+030_other_pl.pdf,other,pl,narrative,False,other_letter textual_date
+031_utility_bill_uk.pdf,utility_bill,uk,boxed,True,account_number billing_period iban currency_symbol previous_balance stamp
+032_receipt_en.pdf,receipt,en,receipt,True,no_recipient vat_included fiscal_ids card stamp
+033_utility_bill_en.pdf,utility_bill,en,boxed,False,account_number billing_period iban
+034_contract_pl.pdf,contract,pl,narrative,True,monthly_vs_total narrative textual_date currency_symbol no_number stamp
+035_other_pl.pdf,other,pl,narrative,False,other_letter
+036_other_en.pdf,other,en,narrative,False,other_minutes textual_date
+037_invoice_en.pdf,invoice,en,classic,False,vat_breakdown iban
+038_receipt_uk.pdf,receipt,uk,receipt,False,no_recipient vat_included fiscal_ids cash_change
+039_utility_bill_pl.pdf,utility_bill,pl,classic,False,account_number billing_period iban currency_symbol
+040_invoice_en.pdf,invoice,en,classic,True,vat_breakdown iban stamp
+041_receipt_pl.pdf,receipt,pl,receipt,True,no_recipient vat_included fiscal_ids currency_symbol card stamp
+042_invoice_uk.pdf,invoice,uk,boxed,False,vat_breakdown iban currency_symbol paid_no_due
+043_invoice_en.pdf,invoice,en,boxed,True,vat_breakdown iban supply_date stamp
+044_contract_en.pdf,contract,en,narrative,True,monthly_vs_total narrative textual_date start_after_signing stamp
+045_contract_uk.pdf,contract,uk,narrative,True,monthly_vs_total narrative currency_symbol stamp
+046_contract_en.pdf,contract,en,narrative,False,monthly_vs_total narrative
+047_invoice_pl.pdf,invoice,pl,classic,True,vat_breakdown iban textual_date currency_symbol supply_date stamp
+048_invoice_pl.pdf,invoice,pl,boxed,False,vat_breakdown iban textual_date supply_date
+049_utility_bill_pl.pdf,utility_bill,pl,classic,True,account_number billing_period iban currency_symbol stamp

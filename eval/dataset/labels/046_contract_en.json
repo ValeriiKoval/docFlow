@@ -1,0 +1,23 @@
+{
+  "doc_type": "contract",
+  "language": "en",
+  "counterparty": "Proseware Consulting",
+  "recipient": "Jane Example",
+  "document_number": "SRV-2026-983",
+  "issue_date": "2026-06-21",
+  "currency": "USD",
+  "total_amount": 14743.68,
+  "due_date": null,
+  "valid_from": "2026-06-21",
+  "valid_until": "2027-06-20",
+  "_meta": {
+    "file": "046_contract_en.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative"
+    ],
+    "sha256": "3228ded2bcf0df88c594937acce90fa25f3eee46cc5be8ceefdfbf6c4a8bd08b"
+  }
+}

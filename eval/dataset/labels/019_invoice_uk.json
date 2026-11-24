@@ -1,0 +1,25 @@
+{
+  "doc_type": "invoice",
+  "language": "uk",
+  "counterparty": "ТОВ «Офіс-Постач Тест»",
+  "recipient": "Марія Прикладна",
+  "document_number": "692/2026",
+  "issue_date": "2026-08-22",
+  "currency": "UAH",
+  "total_amount": 5749.19,
+  "due_date": "2026-09-21",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "019_invoice_uk.pdf",
+    "layout": "boxed",
+    "noisy": true,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "currency_symbol",
+      "stamp"
+    ],
+    "sha256": "787197ca522f61ed1045db02e0e55d9234ddd5943300ec5c4e96e46a36bbd1df"
+  }
+}

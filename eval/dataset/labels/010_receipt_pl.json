@@ -1,0 +1,26 @@
+{
+  "doc_type": "receipt",
+  "language": "pl",
+  "counterparty": "Market Testowy s.c.",
+  "recipient": null,
+  "document_number": null,
+  "issue_date": "2025-04-15",
+  "currency": "PLN",
+  "total_amount": 273.23,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "010_receipt_pl.pdf",
+    "layout": "receipt",
+    "noisy": false,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "cash_change",
+      "no_number"
+    ],
+    "sha256": "47d98f5ac6c5b361019367728dc6228b521406d6533cfac649155f9a80c913e5"
+  }
+}

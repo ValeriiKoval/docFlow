@@ -1,0 +1,26 @@
+{
+  "doc_type": "contract",
+  "language": "en",
+  "counterparty": "Acme Office Supplies",
+  "recipient": "Example Accounting Ltd",
+  "document_number": "33/2026",
+  "issue_date": "2026-04-20",
+  "currency": "GBP",
+  "total_amount": 55613.52,
+  "due_date": null,
+  "valid_from": "2026-05-01",
+  "valid_until": "2028-04-30",
+  "_meta": {
+    "file": "044_contract_en.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "textual_date",
+      "start_after_signing",
+      "stamp"
+    ],
+    "sha256": "13713809920daea84302349ca939edd655b4855fb16f1765dc0b20602abfa9c5"
+  }
+}

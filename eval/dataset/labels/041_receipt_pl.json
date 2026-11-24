@@ -1,0 +1,27 @@
+{
+  "doc_type": "receipt",
+  "language": "pl",
+  "counterparty": "Sklep Przykład Sp. z o.o.",
+  "recipient": null,
+  "document_number": "61812",
+  "issue_date": "2025-11-11",
+  "currency": "PLN",
+  "total_amount": 177.81,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "041_receipt_pl.pdf",
+    "layout": "receipt",
+    "noisy": true,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "currency_symbol",
+      "card",
+      "stamp"
+    ],
+    "sha256": "83c24fddd028fb45d2920b949823172be919e4af47828d84f03f0f11d192ee85"
+  }
+}

@@ -1,18 +1,26 @@
 {
   "doc_type": "receipt",
   "language": "en",
-  "counterparty": "Northwind Utilities Ltd",
-  "recipient": "Марія Прикладна",
-  "document_number": "A878/2025",
-  "issue_date": "2025-03-22",
-  "currency": "EUR",
-  "total_amount": 321.96,
+  "counterparty": "Acme Office Supplies",
+  "recipient": null,
+  "document_number": "79169",
+  "issue_date": "2026-02-22",
+  "currency": "GBP",
+  "total_amount": 86.51,
   "due_date": null,
   "valid_from": null,
   "valid_until": null,
   "_meta": {
     "file": "008_receipt_en.pdf",
-    "noisy": true,
-    "sha256": "91edcc3e954bc9355264e6754b40ad3d76752fdfb4073f2c4a95763af4963821"
+    "layout": "receipt",
+    "noisy": false,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "currency_symbol",
+      "card"
+    ],
+    "sha256": "baf943063fc673a527546e14a68cd1dbfd1a8df54ee1b172b7a2b14af077e751"
   }
 }

@@ -1,0 +1,26 @@
+{
+  "doc_type": "utility_bill",
+  "language": "pl",
+  "counterparty": "Alfa-Energia Sp. z o.o.",
+  "recipient": "Piotr Wzorcowy",
+  "document_number": "2026-01-672133",
+  "issue_date": "2026-01-09",
+  "currency": "PLN",
+  "total_amount": 884.84,
+  "due_date": "2026-01-19",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "049_utility_bill_pl.pdf",
+    "layout": "classic",
+    "noisy": true,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "currency_symbol",
+      "stamp"
+    ],
+    "sha256": "93d693c52ec7f525aa20bb9999a55c7d3510df61e3623ddd0b0d9ce823c58915"
+  }
+}

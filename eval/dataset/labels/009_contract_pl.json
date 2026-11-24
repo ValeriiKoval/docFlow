@@ -1,0 +1,25 @@
+{
+  "doc_type": "contract",
+  "language": "pl",
+  "counterparty": "Gamma Telekom Sp. z o.o.",
+  "recipient": "Jan Testowy",
+  "document_number": "DU-2026-267",
+  "issue_date": "2026-08-30",
+  "currency": "PLN",
+  "total_amount": 5515.68,
+  "due_date": null,
+  "valid_from": "2026-09-01",
+  "valid_until": "2027-02-28",
+  "_meta": {
+    "file": "009_contract_pl.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "currency_symbol",
+      "start_after_signing"
+    ],
+    "sha256": "56fc44b94a21b14a8d20c739316f95926eba90060146f0370a6ca9435f5dffb6"
+  }
+}

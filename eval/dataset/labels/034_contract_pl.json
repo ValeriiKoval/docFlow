@@ -1,0 +1,27 @@
+{
+  "doc_type": "contract",
+  "language": "pl",
+  "counterparty": "Gamma Telekom Sp. z o.o.",
+  "recipient": "Kancelaria Przykład",
+  "document_number": null,
+  "issue_date": "2026-12-28",
+  "currency": "PLN",
+  "total_amount": 10339.68,
+  "due_date": null,
+  "valid_from": "2026-12-28",
+  "valid_until": "2027-12-27",
+  "_meta": {
+    "file": "034_contract_pl.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "textual_date",
+      "currency_symbol",
+      "no_number",
+      "stamp"
+    ],
+    "sha256": "7e9f123684daa7f954448af7c66ee798da7d131b6193b9f8989ac4975a697b16"
+  }
+}

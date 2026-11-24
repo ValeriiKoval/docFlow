@@ -1,0 +1,23 @@
+{
+  "doc_type": "insurance",
+  "language": "en",
+  "counterparty": "Litware Assurance Ltd",
+  "recipient": "Jane Example",
+  "document_number": "HC5924115",
+  "issue_date": "2026-09-03",
+  "currency": "EUR",
+  "total_amount": 806.1,
+  "due_date": null,
+  "valid_from": "2026-09-03",
+  "valid_until": "2027-09-02",
+  "_meta": {
+    "file": "001_insurance_en.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "sum_insured",
+      "currency_symbol"
+    ],
+    "sha256": "f4d877d0ec876ed49d55cab7b2ef936b1c0e95823c71b2f9a658defdea32cb96"
+  }
+}

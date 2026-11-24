@@ -1,0 +1,22 @@
+{
+  "doc_type": "other",
+  "language": "uk",
+  "counterparty": "ТОВ «ЛінкНет»",
+  "recipient": "Ірина Зразкова",
+  "document_number": "227",
+  "issue_date": "2025-06-09",
+  "currency": null,
+  "total_amount": null,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "023_other_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "other_certificate"
+    ],
+    "sha256": "bf2996807d27a5d8c72507865eb80e855bca37519f094228b7389ffd00dca5bf"
+  }
+}

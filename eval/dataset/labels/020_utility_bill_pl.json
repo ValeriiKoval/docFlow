@@ -1,0 +1,25 @@
+{
+  "doc_type": "utility_bill",
+  "language": "pl",
+  "counterparty": "Alfa-Energia Sp. z o.o.",
+  "recipient": "Piotr Wzorcowy",
+  "document_number": "2025-08-102973",
+  "issue_date": "2025-08-27",
+  "currency": "PLN",
+  "total_amount": 1022.75,
+  "due_date": "2025-09-16",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "020_utility_bill_pl.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "previous_balance"
+    ],
+    "sha256": "e1e6574068957e77e5cd23df08d18d7000f30d21cd8b1d3c74b29a3de8c8b391"
+  }
+}

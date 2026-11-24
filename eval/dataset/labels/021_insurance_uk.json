@@ -1,0 +1,25 @@
+{
+  "doc_type": "insurance",
+  "language": "uk",
+  "counterparty": "ТДВ «Страхова компанія Приклад»",
+  "recipient": "Марія Прикладна",
+  "document_number": "719.2026.8048",
+  "issue_date": "2026-09-04",
+  "currency": "UAH",
+  "total_amount": 1384.58,
+  "due_date": null,
+  "valid_from": "2026-09-11",
+  "valid_until": "2027-09-10",
+  "_meta": {
+    "file": "021_insurance_uk.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "sum_insured",
+      "currency_symbol",
+      "issue_before_start",
+      "stamp"
+    ],
+    "sha256": "74c4b74652f97f07b6659bc4f658c3528cad9220be41b3c3f53659a0b5f478e2"
+  }
+}

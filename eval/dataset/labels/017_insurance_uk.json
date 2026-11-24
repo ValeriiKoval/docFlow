@@ -1,0 +1,23 @@
+{
+  "doc_type": "insurance",
+  "language": "uk",
+  "counterparty": "ТДВ «Страхова компанія Приклад»",
+  "recipient": "Ірина Зразкова",
+  "document_number": "274.2025.3868",
+  "issue_date": "2025-05-30",
+  "currency": "UAH",
+  "total_amount": 2341.29,
+  "due_date": null,
+  "valid_from": "2025-05-30",
+  "valid_until": "2026-05-29",
+  "_meta": {
+    "file": "017_insurance_uk.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "sum_insured",
+      "currency_symbol"
+    ],
+    "sha256": "523f8eee35fef8e2683b8497143c56c606068acfc8b7c97709787fb8c4412c10"
+  }
+}

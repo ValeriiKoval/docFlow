@@ -1,0 +1,24 @@
+{
+  "doc_type": "invoice",
+  "language": "uk",
+  "counterparty": "ТОВ «ЛінкНет»",
+  "recipient": "ФОП Тестовий О. В.",
+  "document_number": "246/2026",
+  "issue_date": "2026-10-03",
+  "currency": "UAH",
+  "total_amount": 4930.27,
+  "due_date": "2026-10-17",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "013_invoice_uk.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "supply_date"
+    ],
+    "sha256": "a248ea907e003bd94df772d9bc67a12b45d057eca5daeb494ffaffbe5b37b1f6"
+  }
+}

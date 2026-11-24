@@ -1,0 +1,25 @@
+{
+  "doc_type": "invoice",
+  "language": "en",
+  "counterparty": "Acme Office Supplies",
+  "recipient": "Example Accounting Ltd",
+  "document_number": "INV-2026-9732",
+  "issue_date": "2026-11-08",
+  "currency": "USD",
+  "total_amount": 3180.38,
+  "due_date": "2026-11-15",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "043_invoice_en.pdf",
+    "layout": "boxed",
+    "noisy": true,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "supply_date",
+      "stamp"
+    ],
+    "sha256": "63d2e1d6e7981e0c46c790ceac2d0b86bab3d1bbf978fa4c8ec2a3644e84c4b8"
+  }
+}

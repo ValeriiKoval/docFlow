@@ -52,7 +52,7 @@ def main():
             ex = rec.get("extraction")
             res = {"name": pf.stem, "doc_type": gt["doc_type"], "error": rec.get("error"),
                    "usage": rec.get("usage") or {}, "latency": rec.get("latency_s", 0.0),
-                   "conf": (ex or {}).get("confidence", 0.0)}
+                   "conf": (ex or {}).get("confidence", 0.0), "tags": gt.get("_meta", {}).get("tags", [])}
             res["fields"] = {f: (match(f, gt[f], ex.get(f)) if ex else False) for f in FIELDS}
             res["exact"] = all(res["fields"].values())
             rows[s].append(res)
@@ -71,6 +71,16 @@ def main():
         cells = []
         for s in sets:
             sub = [r for r in rows[s] if r["doc_type"] == t]
+            cells.append(f"{100*sum(r['exact'] for r in sub)/len(sub):.0f}% (n={len(sub)})" if sub else "-")
+        L.append(f"| {t} | " + " | ".join(cells) + " |")
+    L.append("")
+
+    L += ["## Doc exact match by trap (tag)", "", "See eval/dataset/README.md for tag meanings.", "",
+          "| Tag | " + " | ".join(sets) + " |", "|---|" + "---|" * len(sets)]
+    for t in sorted({t for s in sets for r in rows[s] for t in r["tags"]}):
+        cells = []
+        for s in sets:
+            sub = [r for r in rows[s] if t in r["tags"]]
             cells.append(f"{100*sum(r['exact'] for r in sub)/len(sub):.0f}% (n={len(sub)})" if sub else "-")
         L.append(f"| {t} | " + " | ".join(cells) + " |")
     L.append("")

@@ -1,0 +1,25 @@
+{
+  "doc_type": "contract",
+  "language": "uk",
+  "counterparty": "ТОВ «Офіс-Постач Тест»",
+  "recipient": "ФОП Тестовий О. В.",
+  "document_number": "K-2025-346",
+  "issue_date": "2025-06-06",
+  "currency": "UAH",
+  "total_amount": 23326.8,
+  "due_date": null,
+  "valid_from": "2025-06-06",
+  "valid_until": "2026-06-05",
+  "_meta": {
+    "file": "045_contract_uk.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "currency_symbol",
+      "stamp"
+    ],
+    "sha256": "2def60a5b83780d336931d10d1f3737d49f05c4b5defc1f0a040c84c796e9df0"
+  }
+}

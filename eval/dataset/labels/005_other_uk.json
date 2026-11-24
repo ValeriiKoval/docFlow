@@ -1,0 +1,22 @@
+{
+  "doc_type": "other",
+  "language": "uk",
+  "counterparty": "ТОВ «Офіс-Постач Тест»",
+  "recipient": "Ірина Зразкова",
+  "document_number": "82",
+  "issue_date": "2025-12-07",
+  "currency": null,
+  "total_amount": null,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "005_other_uk.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "other_certificate"
+    ],
+    "sha256": "33010d907d315ae1f82eb8b891d9d446d53a88d5a11035b28dae17273d91d311"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "doc_type": "invoice",
+  "language": "pl",
+  "counterparty": "Kappa IT s.c.",
+  "recipient": "Biuro Testowe Sp. z o.o.",
+  "document_number": "293/10/2025",
+  "issue_date": "2025-10-26",
+  "currency": "PLN",
+  "total_amount": 1106.51,
+  "due_date": "2025-11-25",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "048_invoice_pl.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "textual_date",
+      "supply_date"
+    ],
+    "sha256": "88de1973a3ec901c58d70d0f69bc291dedb3877f3bc29320319fbb58bf470798"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "doc_type": "invoice",
+  "language": "pl",
+  "counterparty": "Biuro Rachunkowe Sigma",
+  "recipient": "Biuro Testowe Sp. z o.o.",
+  "document_number": "145/05/2025",
+  "issue_date": "2025-05-18",
+  "currency": "PLN",
+  "total_amount": 2870.12,
+  "due_date": "2025-06-08",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "004_invoice_pl.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban",
+      "supply_date"
+    ],
+    "sha256": "73e70b5dd3f9e6de5b7eeca33e800f60e03c645a3cb7c2e142fe817a74737529"
+  }
+}

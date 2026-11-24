@@ -1,0 +1,27 @@
+{
+  "doc_type": "utility_bill",
+  "language": "uk",
+  "counterparty": "КП «Міськводоканал-Тест»",
+  "recipient": "Марія Прикладна",
+  "document_number": "958287383",
+  "issue_date": "2026-01-01",
+  "currency": "UAH",
+  "total_amount": 6128.3,
+  "due_date": "2026-01-11",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "031_utility_bill_uk.pdf",
+    "layout": "boxed",
+    "noisy": true,
+    "tags": [
+      "account_number",
+      "billing_period",
+      "iban",
+      "currency_symbol",
+      "previous_balance",
+      "stamp"
+    ],
+    "sha256": "173869f32d6343f8251f62996d31be30da3bdc405e64f775f29aac820b302136"
+  }
+}

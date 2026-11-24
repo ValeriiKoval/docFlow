@@ -1,0 +1,27 @@
+{
+  "doc_type": "contract",
+  "language": "pl",
+  "counterparty": "Kappa IT s.c.",
+  "recipient": "Kancelaria Przykład",
+  "document_number": null,
+  "issue_date": "2025-11-26",
+  "currency": "PLN",
+  "total_amount": 22800.72,
+  "due_date": null,
+  "valid_from": "2025-12-01",
+  "valid_until": "2026-11-30",
+  "_meta": {
+    "file": "016_contract_pl.pdf",
+    "layout": "narrative",
+    "noisy": true,
+    "tags": [
+      "monthly_vs_total",
+      "narrative",
+      "currency_symbol",
+      "no_number",
+      "start_after_signing",
+      "stamp"
+    ],
+    "sha256": "5bb70892e6d0d12dd59572fda59bd387522b5dc9099dd95bd39371b4903a87ce"
+  }
+}

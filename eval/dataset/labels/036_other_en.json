@@ -1,0 +1,23 @@
+{
+  "doc_type": "other",
+  "language": "en",
+  "counterparty": "Proseware Consulting",
+  "recipient": null,
+  "document_number": null,
+  "issue_date": "2025-09-28",
+  "currency": null,
+  "total_amount": null,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "036_other_en.pdf",
+    "layout": "narrative",
+    "noisy": false,
+    "tags": [
+      "other_minutes",
+      "textual_date"
+    ],
+    "sha256": "0c7ef197c2382cfb2dcd74d9aa27c353a44f0ecb75e32289c4ebce731fbba019"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "doc_type": "receipt",
+  "language": "en",
+  "counterparty": "Acme Office Supplies",
+  "recipient": null,
+  "document_number": "50823",
+  "issue_date": "2026-11-27",
+  "currency": "GBP",
+  "total_amount": 43.31,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "032_receipt_en.pdf",
+    "layout": "receipt",
+    "noisy": true,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "card",
+      "stamp"
+    ],
+    "sha256": "23948ea50beba67662265d90b13af4db868781ed77807c5d32004a3b11823f82"
+  }
+}

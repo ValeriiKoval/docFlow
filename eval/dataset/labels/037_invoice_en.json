@@ -1,0 +1,23 @@
+{
+  "doc_type": "invoice",
+  "language": "en",
+  "counterparty": "Proseware Consulting",
+  "recipient": "Alex Specimen",
+  "document_number": "INV-2025-5374",
+  "issue_date": "2025-05-21",
+  "currency": "GBP",
+  "total_amount": 6066.43,
+  "due_date": "2025-05-28",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "037_invoice_en.pdf",
+    "layout": "classic",
+    "noisy": false,
+    "tags": [
+      "vat_breakdown",
+      "iban"
+    ],
+    "sha256": "965c71b0b28b1637955a562d1206dc4b7b525f84fea3e95b2b7b568e94a70f1e"
+  }
+}

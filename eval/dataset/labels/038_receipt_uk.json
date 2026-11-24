@@ -1,18 +1,25 @@
 {
   "doc_type": "receipt",
   "language": "uk",
-  "counterparty": "ТОВ «Карпатська Енергія»",
-  "recipient": "John Sample",
-  "document_number": "E711/2026",
-  "issue_date": "2026-05-11",
+  "counterparty": "ТОВ «Продмаркет Тест»",
+  "recipient": null,
+  "document_number": "32411",
+  "issue_date": "2026-12-24",
   "currency": "UAH",
-  "total_amount": 173.38,
+  "total_amount": 2595.73,
   "due_date": null,
   "valid_from": null,
   "valid_until": null,
   "_meta": {
     "file": "038_receipt_uk.pdf",
-    "noisy": true,
-    "sha256": "ff25560fbe9bfb91c558cc2e07e0c93fd7503696d2d6ec3c15112c9923058838"
+    "layout": "receipt",
+    "noisy": false,
+    "tags": [
+      "no_recipient",
+      "vat_included",
+      "fiscal_ids",
+      "cash_change"
+    ],
+    "sha256": "2f78cb763574887bf0a1dd962b3af1b695a4ecd9b2f295201e8d4a1350944996"
   }
 }

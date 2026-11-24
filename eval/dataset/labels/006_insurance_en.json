@@ -1,0 +1,23 @@
+{
+  "doc_type": "insurance",
+  "language": "en",
+  "counterparty": "Contoso Insurance plc",
+  "recipient": "Alex Specimen",
+  "document_number": "HC2940214",
+  "issue_date": "2025-04-29",
+  "currency": "GBP",
+  "total_amount": 3178.42,
+  "due_date": null,
+  "valid_from": "2025-04-30",
+  "valid_until": "2026-04-29",
+  "_meta": {
+    "file": "006_insurance_en.pdf",
+    "layout": "boxed",
+    "noisy": false,
+    "tags": [
+      "sum_insured",
+      "issue_before_start"
+    ],
+    "sha256": "007294e17a4bc2e8131df7605e3b308ce2249f32c3d10dba76640745dfd49918"
+  }
+}
