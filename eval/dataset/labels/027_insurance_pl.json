@@ -1,0 +1,18 @@
+{
+  "doc_type": "insurance",
+  "language": "pl",
+  "counterparty": "Gamma Telekom Sp. z o.o.",
+  "recipient": "John Sample",
+  "document_number": "D741/2025",
+  "issue_date": "2025-09-11",
+  "currency": "PLN",
+  "total_amount": 1065.59,
+  "due_date": null,
+  "valid_from": "2025-09-11",
+  "valid_until": "2026-09-10",
+  "_meta": {
+    "file": "027_insurance_pl.pdf",
+    "noisy": false,
+    "sha256": "4cb02b615821bf12c79bca844e335ba98cd2203964482923d7ab8ec324ed90e3"
+  }
+}

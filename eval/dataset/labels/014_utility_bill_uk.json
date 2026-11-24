@@ -1,0 +1,18 @@
+{
+  "doc_type": "utility_bill",
+  "language": "uk",
+  "counterparty": "ТОВ «ЛінкНет»",
+  "recipient": "John Sample",
+  "document_number": "E261/2025",
+  "issue_date": "2025-02-21",
+  "currency": "UAH",
+  "total_amount": 265.24,
+  "due_date": "2025-03-23",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "014_utility_bill_uk.pdf",
+    "noisy": true,
+    "sha256": "780abb797d7aead993a214c14f59f341ab137984de02efb2db23a15fee943e53"
+  }
+}

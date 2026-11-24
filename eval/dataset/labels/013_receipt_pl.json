@@ -1,0 +1,18 @@
+{
+  "doc_type": "receipt",
+  "language": "pl",
+  "counterparty": "Delta Serwis Sp. z o.o.",
+  "recipient": "Jan Testowy",
+  "document_number": "B488/2025",
+  "issue_date": "2025-08-07",
+  "currency": "PLN",
+  "total_amount": 6.28,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "013_receipt_pl.pdf",
+    "noisy": false,
+    "sha256": "9684a048af24baa5c7db5df0aade21f91388c73c079ecbd29fee2a0ccbc423be"
+  }
+}

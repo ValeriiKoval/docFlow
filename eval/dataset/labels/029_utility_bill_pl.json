@@ -1,0 +1,18 @@
+{
+  "doc_type": "utility_bill",
+  "language": "pl",
+  "counterparty": "Delta Serwis Sp. z o.o.",
+  "recipient": "John Sample",
+  "document_number": "F852/2026",
+  "issue_date": "2026-02-04",
+  "currency": "PLN",
+  "total_amount": 2202.68,
+  "due_date": "2026-03-06",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "029_utility_bill_pl.pdf",
+    "noisy": false,
+    "sha256": "1279408df1caf3b2919818dd3578daa6ff846f20e8037ca3a221d6eba5f24867"
+  }
+}

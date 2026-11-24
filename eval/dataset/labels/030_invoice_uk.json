@@ -1,0 +1,18 @@
+{
+  "doc_type": "invoice",
+  "language": "uk",
+  "counterparty": "ТОВ «Дніпро-Сервіс»",
+  "recipient": "Марія Прикладна",
+  "document_number": "E677/2026",
+  "issue_date": "2026-09-30",
+  "currency": "UAH",
+  "total_amount": 2665.48,
+  "due_date": "2026-10-07",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "030_invoice_uk.pdf",
+    "noisy": false,
+    "sha256": "6eb3ba31bacd92a32f2d088698a1f33abbe09807c2b408bdbaa007aa5e2079e7"
+  }
+}

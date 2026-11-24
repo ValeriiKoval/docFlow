@@ -1,0 +1,18 @@
+{
+  "doc_type": "receipt",
+  "language": "uk",
+  "counterparty": "ТОВ «ЛінкНет»",
+  "recipient": "Олег Тестовий",
+  "document_number": "D750/2025",
+  "issue_date": "2025-04-14",
+  "currency": "UAH",
+  "total_amount": 501.3,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "003_receipt_uk.pdf",
+    "noisy": true,
+    "sha256": "f5a389435ed451c81e27dd01bd0ad110b76ad4a5b90bdb2838dcefc4f31b1565"
+  }
+}

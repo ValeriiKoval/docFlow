@@ -1,0 +1,19 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# eval artefacts that are cheap to regenerate
+eval/predictions/mock/
+# scans are ~1 MB each and reproducible: python eval/make_scans.py --seed 42
+eval/dataset/scans/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

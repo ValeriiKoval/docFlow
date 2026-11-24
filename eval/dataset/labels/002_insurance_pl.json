@@ -1,0 +1,18 @@
+{
+  "doc_type": "insurance",
+  "language": "pl",
+  "counterparty": "Gamma Telekom Sp. z o.o.",
+  "recipient": "Jan Testowy",
+  "document_number": "F570/2026",
+  "issue_date": "2026-09-11",
+  "currency": "PLN",
+  "total_amount": 2015.93,
+  "due_date": null,
+  "valid_from": "2026-09-11",
+  "valid_until": "2027-09-10",
+  "_meta": {
+    "file": "002_insurance_pl.pdf",
+    "noisy": false,
+    "sha256": "4a9c5055e2d6a116a91e749354d19eff09ce77cdf01b6f549a31bb6706520ac5"
+  }
+}

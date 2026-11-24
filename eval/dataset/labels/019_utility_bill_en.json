@@ -1,0 +1,18 @@
+{
+  "doc_type": "utility_bill",
+  "language": "en",
+  "counterparty": "Contoso Insurance plc",
+  "recipient": "Марія Прикладна",
+  "document_number": "B142/2026",
+  "issue_date": "2026-07-20",
+  "currency": "EUR",
+  "total_amount": 1260.7,
+  "due_date": "2026-07-27",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "019_utility_bill_en.pdf",
+    "noisy": false,
+    "sha256": "8a70804e6884915f285aeed1fd4aaa7f149e515e9bfa38e95dbe7505528c6b59"
+  }
+}

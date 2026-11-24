@@ -1,0 +1,18 @@
+{
+  "doc_type": "invoice",
+  "language": "en",
+  "counterparty": "Fabrikam Services LLC",
+  "recipient": "John Sample",
+  "document_number": "D697/2026",
+  "issue_date": "2026-07-29",
+  "currency": "EUR",
+  "total_amount": 1621.63,
+  "due_date": "2026-08-05",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "005_invoice_en.pdf",
+    "noisy": false,
+    "sha256": "447f872efa6d898aba0511984728d2780a6782764c9518722976d8ac6bcae6b7"
+  }
+}

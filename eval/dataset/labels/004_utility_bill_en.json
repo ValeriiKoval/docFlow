@@ -1,0 +1,18 @@
+{
+  "doc_type": "utility_bill",
+  "language": "en",
+  "counterparty": "Contoso Insurance plc",
+  "recipient": "Олег Тестовий",
+  "document_number": "A334/2026",
+  "issue_date": "2026-12-06",
+  "currency": "EUR",
+  "total_amount": 3294.34,
+  "due_date": "2026-12-20",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "004_utility_bill_en.pdf",
+    "noisy": false,
+    "sha256": "842230820fec180dc794668f2568367f84d64b68250f874587940fc45347b7f6"
+  }
+}

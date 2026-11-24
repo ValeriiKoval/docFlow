@@ -1,0 +1,18 @@
+{
+  "doc_type": "receipt",
+  "language": "en",
+  "counterparty": "Acme Office Supplies",
+  "recipient": "Anna Przykładowa",
+  "document_number": "A706/2026",
+  "issue_date": "2026-01-20",
+  "currency": "EUR",
+  "total_amount": 415.92,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "033_receipt_en.pdf",
+    "noisy": false,
+    "sha256": "dc43ed1911cd2c0b23172bcfd5945fff4bdf92bae104fdac083813e98695e9a1"
+  }
+}

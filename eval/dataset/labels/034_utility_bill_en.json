@@ -1,0 +1,18 @@
+{
+  "doc_type": "utility_bill",
+  "language": "en",
+  "counterparty": "Northwind Utilities Ltd",
+  "recipient": "John Sample",
+  "document_number": "F449/2026",
+  "issue_date": "2026-01-15",
+  "currency": "EUR",
+  "total_amount": 90.1,
+  "due_date": "2026-01-29",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "034_utility_bill_en.pdf",
+    "noisy": false,
+    "sha256": "f27e8fc9eb28176d056824530f319453e924599324cb646a8aafd19e38416a26"
+  }
+}

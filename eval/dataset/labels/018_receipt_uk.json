@@ -1,0 +1,18 @@
+{
+  "doc_type": "receipt",
+  "language": "uk",
+  "counterparty": "ТОВ «ЛінкНет»",
+  "recipient": "Олег Тестовий",
+  "document_number": "A103/2026",
+  "issue_date": "2026-10-12",
+  "currency": "UAH",
+  "total_amount": 203.47,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "018_receipt_uk.pdf",
+    "noisy": true,
+    "sha256": "4d797caa65f9fa5e2698d219c4ca6ae29e732ebfd3ecaee599a23c7671ec164b"
+  }
+}

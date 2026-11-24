@@ -1,0 +1,18 @@
+{
+  "doc_type": "invoice",
+  "language": "uk",
+  "counterparty": "ФОП Мельник О. І.",
+  "recipient": "Марія Прикладна",
+  "document_number": "A283/2025",
+  "issue_date": "2025-06-16",
+  "currency": "UAH",
+  "total_amount": 2956.8,
+  "due_date": "2025-06-30",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "020_invoice_uk.pdf",
+    "noisy": false,
+    "sha256": "fb8b81a0ee18ad628453a6053da31d7abb59c08244845b949d954c1664578d3b"
+  }
+}

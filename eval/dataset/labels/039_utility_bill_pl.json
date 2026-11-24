@@ -1,0 +1,18 @@
+{
+  "doc_type": "utility_bill",
+  "language": "pl",
+  "counterparty": "Alfa-Energia Sp. z o.o.",
+  "recipient": "John Sample",
+  "document_number": "C814/2025",
+  "issue_date": "2025-02-16",
+  "currency": "PLN",
+  "total_amount": 3778.59,
+  "due_date": "2025-03-18",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "039_utility_bill_pl.pdf",
+    "noisy": false,
+    "sha256": "dc118ad5fa7a51e7d10661980507d2edd760f6579b074f8e40d5d88e390da9c5"
+  }
+}

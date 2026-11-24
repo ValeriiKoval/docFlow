@@ -1,0 +1,18 @@
+{
+  "doc_type": "contract",
+  "language": "pl",
+  "counterparty": "Beta Ubezpieczenia S.A.",
+  "recipient": "Anna Przykładowa",
+  "document_number": "A775/2025",
+  "issue_date": "2025-11-09",
+  "currency": "PLN",
+  "total_amount": 8270.09,
+  "due_date": null,
+  "valid_from": "2025-11-09",
+  "valid_until": "2026-11-09",
+  "_meta": {
+    "file": "021_contract_pl.pdf",
+    "noisy": false,
+    "sha256": "23e2f9fa2a5092acad1eefa47ede010c29743717ac4a56cac893781e3bc60525"
+  }
+}

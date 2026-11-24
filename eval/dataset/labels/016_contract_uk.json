@@ -1,0 +1,18 @@
+{
+  "doc_type": "contract",
+  "language": "uk",
+  "counterparty": "ТОВ «Дніпро-Сервіс»",
+  "recipient": "Jan Testowy",
+  "document_number": "E318/2026",
+  "issue_date": "2026-04-15",
+  "currency": "UAH",
+  "total_amount": 3082.9,
+  "due_date": null,
+  "valid_from": "2026-04-15",
+  "valid_until": "2028-04-14",
+  "_meta": {
+    "file": "016_contract_uk.pdf",
+    "noisy": false,
+    "sha256": "2fa069782d92f7b2605e2f4cb0fe8642ae9c23f22d504be41f9f0c84bf6bc729"
+  }
+}

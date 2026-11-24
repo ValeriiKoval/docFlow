@@ -1,0 +1,18 @@
+{
+  "doc_type": "invoice",
+  "language": "uk",
+  "counterparty": "ТОВ «Дніпро-Сервіс»",
+  "recipient": "John Sample",
+  "document_number": "B385/2025",
+  "issue_date": "2025-12-05",
+  "currency": "UAH",
+  "total_amount": 2689.15,
+  "due_date": "2025-12-12",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "010_invoice_uk.pdf",
+    "noisy": false,
+    "sha256": "02fff2f56245c9eae604252ab10adfcc57833eadd78fa776f826c0b05d654687"
+  }
+}

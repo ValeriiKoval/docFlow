@@ -1,0 +1,18 @@
+{
+  "doc_type": "receipt",
+  "language": "en",
+  "counterparty": "Northwind Utilities Ltd",
+  "recipient": "Марія Прикладна",
+  "document_number": "A878/2025",
+  "issue_date": "2025-03-22",
+  "currency": "EUR",
+  "total_amount": 321.96,
+  "due_date": null,
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "008_receipt_en.pdf",
+    "noisy": true,
+    "sha256": "91edcc3e954bc9355264e6754b40ad3d76752fdfb4073f2c4a95763af4963821"
+  }
+}

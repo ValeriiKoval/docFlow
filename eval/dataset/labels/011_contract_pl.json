@@ -1,0 +1,18 @@
+{
+  "doc_type": "contract",
+  "language": "pl",
+  "counterparty": "Delta Serwis Sp. z o.o.",
+  "recipient": "Марія Прикладна",
+  "document_number": "F155/2026",
+  "issue_date": "2026-03-10",
+  "currency": "PLN",
+  "total_amount": 1681.95,
+  "due_date": null,
+  "valid_from": "2026-03-10",
+  "valid_until": "2027-03-10",
+  "_meta": {
+    "file": "011_contract_pl.pdf",
+    "noisy": false,
+    "sha256": "0b369855be7b093e0c2f98a890afae54b86ff011657dbe719349be8d2c7ef198"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "doc_type": "invoice",
+  "language": "pl",
+  "counterparty": "Gamma Telekom Sp. z o.o.",
+  "recipient": "Олег Тестовий",
+  "document_number": "B950/2026",
+  "issue_date": "2026-03-23",
+  "currency": "PLN",
+  "total_amount": 3741.1,
+  "due_date": "2026-04-06",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "035_invoice_pl.pdf",
+    "noisy": false,
+    "sha256": "e2bda5efe297c460ad5ed7e76b96674f85ab77089f67c54cda0cdf8e88b9b6f5"
+  }
+}

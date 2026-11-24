@@ -1,0 +1,18 @@
+{
+  "doc_type": "utility_bill",
+  "language": "pl",
+  "counterparty": "Alfa-Energia Sp. z o.o.",
+  "recipient": "Олег Тестовий",
+  "document_number": "C315/2026",
+  "issue_date": "2026-02-20",
+  "currency": "PLN",
+  "total_amount": 1742.36,
+  "due_date": "2026-03-22",
+  "valid_from": null,
+  "valid_until": null,
+  "_meta": {
+    "file": "024_utility_bill_pl.pdf",
+    "noisy": false,
+    "sha256": "4bc456e053b1bb4d3f630f5a74380b77a394ea69be2a31e93ce540ec398c57dc"
+  }
+}

@@ -1,0 +1,10 @@
+# eval: dataset generation, scans, extraction, scoring
+anthropic>=2.13,<3
+jsonschema>=4.26,<5
+reportlab>=5.1,<6
+pypdfium2>=5.15,<6
+pillow>=13.0,<14
+numpy>=2.5,<3
+python-dotenv>=1.2,<2
+
+# service (FastAPI, pydantic, DB driver) is added in stage 3

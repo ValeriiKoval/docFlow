@@ -1,0 +1,18 @@
+{
+  "doc_type": "contract",
+  "language": "pl",
+  "counterparty": "Delta Serwis Sp. z o.o.",
+  "recipient": "Олег Тестовий",
+  "document_number": "D358/2025",
+  "issue_date": "2025-12-12",
+  "currency": "PLN",
+  "total_amount": 9670.98,
+  "due_date": null,
+  "valid_from": "2025-12-12",
+  "valid_until": "2026-12-12",
+  "_meta": {
+    "file": "031_contract_pl.pdf",
+    "noisy": false,
+    "sha256": "40ccc9bd99b536e2323e7b46380c42889a99963a3eb089b9f90fd70458b92f73"
+  }
+}
