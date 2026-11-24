@@ -5,7 +5,7 @@
                            eval/predictions/claude-sonnet-5-5/extract_v2 \
                            eval/predictions/claude-haiku-5-5/extract_v2 --threshold 0.8
 
-Writes eval/results/summary.md. Prices (USD per 1M tokens) come from PRICES below;
+Writes eval/results/summary.md. Prices (USD per 1M tokens) come from docflow.extraction.PRICES;
 check them against the current pricing page before quoting.
 """
 import argparse, json, sys
@@ -14,7 +14,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from eval import FIELDS, SET_ORDER, HERE, match  # noqa: E402
 
-PRICES = {"claude-sonnet-5-5": (2.0, 10.0), "claude-haiku-5-5": (0.10, 0.50), "claude-opus-5-5": (4.0, 20.0)}
+sys.path.insert(0, str(HERE.parent / "service"))
+from docflow.extraction import PRICES  # noqa: E402
 
 
 def load(run: Path, labels: Path):

@@ -13,58 +13,21 @@ Output: eval/predictions/<model>/<prompt>/<set>/<name>.json
   {"extraction": {...}|null, "usage": {...}, "latency_s": float, "attempts": int,
    "stop_reason": str, "served_by": str, "error": str|null, "prompt": str}
 
-API notes (current models):
-  * forced tool_choice returns 400 on Sonnet 5.5 / Opus 5.5, so we use tool_choice=auto
-    + strict tool schema, tell the model in the prompt to call the tool, and re-ask if
-    it does not;
-  * strict schemas do not support pattern/minimum/maximum, so the schema sent to the
-    API is a relaxed copy (ISO dates via format=date); the full schema.json is still
-    enforced locally with jsonschema;
-  * adaptive thinking is on by default, so output_tokens include thinking tokens;
-  * Sonnet / Opus requests enable server-side refusal fallback ("default" routing);
-    `served_by` records which model actually answered.
+The Claude call itself lives in service/docflow/extraction.py (shared with the
+FastAPI service), so eval numbers describe the production code path.
 """
-import argparse, base64, copy, json, os, random, threading, time
+import argparse, json, os, random, sys, threading, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
+sys.path.insert(0, str(ROOT / "service"))
 
-try:  # optional: pick up ANTHROPIC_API_KEY / DOCFLOW_MODEL from <repo>/.env
-    from dotenv import load_dotenv
-    load_dotenv(ROOT / ".env")
-except ImportError:
-    pass
+from docflow.config import Settings  # noqa: E402  (also loads <repo>/.env)
+from docflow.extraction import Extractor, load_schema  # noqa: E402
 
-SCHEMA = json.loads((ROOT / "schema.json").read_text(encoding="utf-8"))
-TOOL_NAME = "record_document"
-FALLBACK_BETA = "server-side-fallback-2026-07-01"
-
-
-def api_schema(schema: dict) -> dict:
-    """Strict-mode compatible copy: drop unsupported constraints, nullable types via anyOf."""
-    s = copy.deepcopy(schema)
-    s.pop("$schema", None)
-    s.pop("title", None)
-    for name, p in s["properties"].items():
-        is_date = "pattern" in p and "\\d{4}" in p["pattern"]
-        for k in ("pattern", "minimum", "maximum"):
-            p.pop(k, None)
-        if is_date:
-            p["format"] = "date"
-        t = p.get("type")
-        if isinstance(t, list):  # ["string", "null"] -> anyOf
-            desc = p.pop("description", None)
-            base = {k: v for k, v in p.items() if k != "type"}
-            s["properties"][name] = {"anyOf": [{"type": t[0], **base}, {"type": "null"}]}
-            if desc:
-                s["properties"][name]["description"] = desc
-    return s
-
-
-TOOL = {"name": TOOL_NAME, "description": "Record the fields extracted from the document.",
-        "strict": True, "input_schema": api_schema(SCHEMA)}
+SCHEMA = load_schema(ROOT / "schema.json")
 
 
 def pdf_dir(src: Path, s: str) -> Path:
@@ -74,43 +37,6 @@ def pdf_dir(src: Path, s: str) -> Path:
 def validate(extraction):
     import jsonschema
     jsonschema.validate(extraction, SCHEMA)
-
-
-def call_claude(client, model, system, pdf_path, effort=None, max_attempts=3):
-    """One document -> (extraction, usage, latency, meta). Re-asks when no valid tool call comes back.
-    Network errors, 429 and 5xx are retried by the SDK itself (max_retries on the client)."""
-    import anthropic
-    data = base64.standard_b64encode(pdf_path.read_bytes()).decode()
-    kwargs = dict(model=model, max_tokens=16000, system=system, tools=[TOOL], tool_choice={"type": "auto"},
-                  messages=[{"role": "user", "content": [
-                      {"type": "document", "source": {"type": "base64", "media_type": "application/pdf", "data": data}},
-                      {"type": "text", "text": f"Extract the fields from this document and call {TOOL_NAME}."}]}])
-    if effort:
-        kwargs["output_config"] = {"effort": effort}
-    use_fallback = not model.startswith("claude-haiku")
-    usage = {"input_tokens": 0, "output_tokens": 0}
-    last_err, t0 = None, time.time()
-    for attempt in range(1, max_attempts + 1):
-        if use_fallback:
-            r = client.beta.messages.create(betas=[FALLBACK_BETA], fallbacks="default", **kwargs)
-        else:
-            r = client.messages.create(**kwargs)
-        usage["input_tokens"] += r.usage.input_tokens
-        usage["output_tokens"] += r.usage.output_tokens
-        meta = {"attempts": attempt, "stop_reason": r.stop_reason, "served_by": r.model}
-        if r.stop_reason == "refusal":
-            raise RuntimeError(f"refusal: {getattr(r.stop_details, 'category', None)}")
-        block = next((b for b in r.content if b.type == "tool_use" and b.name == TOOL_NAME), None)
-        if block is None:
-            last_err = f"no {TOOL_NAME} call (stop_reason={r.stop_reason})"
-            continue
-        try:
-            validate(block.input)
-        except Exception as e:  # jsonschema.ValidationError
-            last_err = f"schema: {str(e).splitlines()[0]}"
-            continue
-        return block.input, usage, time.time() - t0, meta
-    raise RuntimeError(f"{last_err} after {max_attempts} attempts")
 
 
 def mock_extraction(label, rng, set_name):
@@ -132,7 +58,7 @@ def main():
     ap.add_argument("--src", default=str(HERE / "dataset"))
     ap.add_argument("--sets", nargs="+", default=["clean", "light", "medium", "heavy"])
     ap.add_argument("--prompt", default="extract_v1")
-    ap.add_argument("--model", default=os.environ.get("DOCFLOW_MODEL"))
+    ap.add_argument("--model", default=os.environ.get("DOCFLOW_MODEL"), help="default: DOCFLOW_MODEL")
     ap.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"], help="default: model default")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--only", nargs="+", help="document stems to run, e.g. 004_invoice_pl")
@@ -143,15 +69,12 @@ def main():
     a = ap.parse_args()
 
     src = Path(a.src)
-    system = (ROOT / "prompts" / f"{a.prompt}.md").read_text(encoding="utf-8")
     rng = random.Random(0)
     if a.mock:
-        model, client = "mock", None
+        model, extractor = "mock", None
     else:
-        if not a.model:
-            raise SystemExit("Set --model or DOCFLOW_MODEL")
-        import anthropic
-        model, client = a.model, anthropic.Anthropic(max_retries=4)
+        model = a.model or Settings().model
+        extractor = Extractor(model, a.prompt, ROOT / "prompts", ROOT / "schema.json", effort=a.effort)
     run_name = model + (f"@{a.effort}" if a.effort else "")
     lock = threading.Lock()
     totals = {"in": 0, "out": 0, "err": 0}
@@ -165,8 +88,9 @@ def main():
                 rec["usage"] = {"input_tokens": 1500, "output_tokens": 150}
                 validate(rec["extraction"])
             else:
-                rec["extraction"], rec["usage"], rec["latency_s"], meta = call_claude(client, model, system, p, a.effort)
-                rec.update(meta)
+                r = extractor.extract(p.read_bytes(), "application/pdf")
+                rec.update(extraction=r.fields, usage=r.usage, latency_s=r.latency_s, attempts=r.attempts,
+                           stop_reason=r.stop_reason, served_by=r.served_by)
         except Exception as e:
             rec["error"] = f"{type(e).__name__}: {e}"[:400]
         (out / f"{p.stem}.json").write_text(json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")

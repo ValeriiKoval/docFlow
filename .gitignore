@@ -13,6 +13,9 @@ eval/predictions/mock/
 eval/dataset/scans/
 eval/dataset_test/scans/
 
+# service runtime data (SQLite DB, stored originals)
+data/
+
 # run logs
 eval/*.log
 

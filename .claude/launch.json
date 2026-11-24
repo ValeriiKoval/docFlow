@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docflow-api",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "uvicorn", "docflow.main:app", "--app-dir", "service", "--port", "8000"],
+      "port": 8000
+    }
+  ]
+}
