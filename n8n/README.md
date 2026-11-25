@@ -44,7 +44,19 @@ Webhook /webhook/reminders/run ─► X-API-Key ok? ────┴─► GET /d
   - only chats on the allowlist are served;
   - the manual reminders webhook requires the service API key.
 - **No business logic in n8n:** validation, dedup, storage, the review state machine, deadline queries and the agent live in the service. n8n only routes events, schedules jobs and formats messages.
-- **Code-node sources** are plain JavaScript in [code/](code/). If you edit a workflow in the n8n UI, export it back over the JSON.
+- **Workflows as code:** Code-node sources are plain JavaScript in [code/](code/), and [build_workflow.py](build_workflow.py) assembles the JSON from them. The shared helpers in `common.js` are prepended to the nodes that format messages. Edit the `.js` files, never `jsCode` in the JSON:
+  ```
+  python n8n/build_workflow.py                    # rebuild both JSON files from code/
+  python n8n/build_workflow.py --check            # exit 1 if the JSON is stale (names the nodes)
+  python n8n/build_workflow.py --pull             # after editing Code nodes in the n8n UI: export both workflows
+                                                  # from the running container, write their JS to code/*.js, rebuild
+  python n8n/build_workflow.py --extract my.json  # the same, from a workflow file downloaded from the UI
+  ```
+  `--pull` needs the stack running (`docker compose up -d`). Save the workflow in the UI first. `--pull` and `--extract` stop with an error on changes they can't map back safely: a renamed or new Code node, or edited shared helpers. Those go into `build_workflow.py` or `common.js` by hand. The same applies to changes outside Code nodes (wiring, HTTP parameters). Review `git diff n8n/code` before committing.
+- **Pre-commit hook:** [.githooks/pre-commit](../.githooks/pre-commit) runs `--check` when a commit touches `n8n/`, so stale JSON can't be committed. Enable it once per clone:
+  ```
+  git config core.hooksPath .githooks
+  ```
 
 ## Run
 

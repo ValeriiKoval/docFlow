@@ -1,0 +1,14 @@
+#!/bin/sh
+# Refuse a commit when the n8n workflow JSON is out of date with n8n/code/*.js (or vice versa).
+# Enable once per clone:  git config core.hooksPath .githooks
+# Skip once (not recommended): git commit --no-verify
+
+git diff --cached --name-only | grep -q '^n8n/' || exit 0
+
+for py in python3 python py; do
+    if command -v "$py" >/dev/null 2>&1 && "$py" -c "import sys" >/dev/null 2>&1; then
+        exec "$py" n8n/build_workflow.py --check
+    fi
+done
+echo "pre-commit: Python not found, skipped the n8n workflow check" >&2
+exit 0
