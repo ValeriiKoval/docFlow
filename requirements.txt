@@ -7,4 +7,4 @@ pillow>=13.0,<14
 numpy>=2.5,<3
 python-dotenv>=1.2,<2
 
-# service (FastAPI, pydantic, DB driver) is added in stage 3
+# service (FastAPI, pydantic, DB driver): service/requirements.txt

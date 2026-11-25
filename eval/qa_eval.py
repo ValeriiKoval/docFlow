@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Evaluate the Q&A agent (service/docflow/agent.py) on questions generated from the test-set labels.
 
-    python eval/qa_eval.py                              # DOCFLOW_AGENT_MODEL or claude-sonnet-5-5
+    python eval/qa_eval.py                              # DOCFLOW_AGENT_MODEL or claude-haiku-5-5
     python eval/qa_eval.py --model claude-haiku-5-5
 
 The 50 test documents are loaded from their ground-truth labels into a temporary SQLite database
