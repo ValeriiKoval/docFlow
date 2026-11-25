@@ -1,5 +1,7 @@
 # DocFlow AI: incoming documents for a small office, automated with Claude and n8n
 
+[![CI](https://github.com/ValeriiKoval/docFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/ValeriiKoval/docFlow/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A small office or accounting firm receives invoices, utility bills, receipts, contracts and insurance policies as PDFs and phone photos. Someone has to retype each one into a register and remember every payment deadline and expiry date. **DocFlow AI** takes a document sent to a Telegram bot and does the rest:
 - it extracts 11 fields with Claude;
 - it validates them and stores them in Postgres;
