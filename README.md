@@ -81,7 +81,7 @@ flowchart LR
 
 | Choice | Why |
 |---|---|
-| **n8n for the edges, Python for the core** | n8n is good at what changes per client: channels (Telegram, email, Drive), schedules, message wording. Logic that must be tested lives in a FastAPI service with 24 pytest tests: validation, dedup, the review state machine, deadline queries, the agent. |
+| **n8n for the edges, Python for the core** | n8n is good at what changes per client: channels (Telegram, email, Drive), schedules, message wording. Logic that must be tested lives in a FastAPI service with 53 pytest tests: validation, dedup, the review state machine, deadline queries, the agent. |
 | **Webhook node + Bot API over HTTP** instead of n8n's Telegram nodes | Every setting comes from environment variables, so the workflows import and run with no clicking in the UI. The same workflows also run against a mock Bot API in an offline test ([n8n/test_workflow.py](n8n/test_workflow.py)). |
 | **Structured output via a strict tool** (`record_document`) | The answer always parses into the schema: 0 invalid responses in 1,200 eval calls. The JSON schema doubles as documentation of every field. |
 | **PDF and images sent to Claude directly** | No separate OCR stack. Claude reads text-layer PDFs, scans and photos with one code path. |
@@ -211,7 +211,7 @@ Every Claude call is logged in the `runs` and `agent_runs` tables (tokens, cost,
   - The API container runs as a non-root user.
   - Secrets live only in `.env`, which is git-ignored.
 - **Tests.**
-  - 24 pytest tests with fake Claude clients.
+  - 53 pytest tests with fake Claude clients.
   - An offline end-to-end test of both n8n workflows against a mock Telegram Bot API, which covers: wrong secret, help, auto-accept, review with correction and approval, question, `/deadlines`, access denied, and reminders.
 
 ## 7. Privacy
@@ -278,7 +278,7 @@ Then send the bot a PDF or a photo, or ask it a question. Details: [n8n/README.m
 
 ```bash
 pip install -r requirements.txt -r service/requirements.txt
-python -m pytest -q                                                   # 24 tests, no API calls
+python -m pytest -q                                                   # 53 tests, no API calls
 python -m uvicorn docflow.main:app --app-dir service --port 8000     # API docs at /docs
 ```
 
