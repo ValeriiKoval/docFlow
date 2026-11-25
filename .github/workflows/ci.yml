@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            service/requirements.txt
+      - name: Install
+        run: pip install -r requirements.txt -r service/requirements.txt
+      - name: Unit tests (fake Claude clients, no API calls)
+        run: python -m pytest -q
+      - name: n8n workflow JSON matches n8n/code/*.js
+        run: python n8n/build_workflow.py --check
+      - name: Eval reports reproduce from committed predictions (no API calls)
+        run: |
+          python eval/eval.py --pred eval/predictions_test/claude-sonnet-5-5/extract_v2 \
+            --labels eval/dataset_test/labels --report /tmp/test_sonnet_v2.md
+          grep -q "doc exact match\*\* | \*\*100%\*\* | \*\*100%\*\* | \*\*98%\*\*" /tmp/test_sonnet_v2.md
+      - name: Docker image builds
+        run: docker build -f service/Dockerfile -t docflow-api .

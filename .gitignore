@@ -24,3 +24,7 @@ eval/*.log
 Thumbs.db
 .vscode/
 .idea/
+
+# tool caches and local settings
+.pytest_cache/
+.claude/settings.local.json
