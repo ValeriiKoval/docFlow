@@ -319,3 +319,7 @@ schema.json extraction schema
 - **Push to a CRM or accounting system.** After `auto_accepted` or approval, push the record to Airtable, HubSpot or an accounting system, so the register becomes a sync source.
 - **Line items and VAT breakdown** for invoices.
 - **Backlog import.** The Message Batches API (half price) for a one-off import of an archive.
+
+## License
+
+[MIT](LICENSE). All documents in `eval/` are synthetic.
