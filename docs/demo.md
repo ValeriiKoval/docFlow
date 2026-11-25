@@ -42,7 +42,7 @@ $env:DOCFLOW_DB = 'docflow_demo'; docker compose up -d api
 **Reminders command** (reads the key from `.env`, prints nothing secret):
 
 ```powershell
-$k = ((Select-String -Path .env -Pattern '^SERVICE_API_KEY=').Line -split '=', 2)[1] -replace '\s+#.*$', ''; Invoke-RestMethod -Method Post -Uri http://localhost:5678/webhook/reminders/run -Headers @{ 'X-API-Key' = $k.Trim() } -ContentType 'application/json' -Body '{"today": "2027-01-24"}'
+$k = ((Select-String -Path .env -Pattern '^REMINDERS_WEBHOOK_KEY=').Line -split '=', 2)[1] -replace '\s+#.*$', ''; Invoke-RestMethod -Method Post -Uri http://localhost:5678/webhook/reminders/run -Headers @{ 'X-API-Key' = $k.Trim() } -ContentType 'application/json' -Body '{"today": "2027-01-24"}'
 ```
 
 **Optional extra shots:**

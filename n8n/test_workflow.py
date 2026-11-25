@@ -8,9 +8,10 @@
 Sends fake Telegram updates to http://localhost:5678/webhook/telegram and checks what the bot "sent":
 intake, review buttons, corrections, Q&A agent, /deadlines, chat allowlist, reminders.
 Costs ~$0.05 in Claude calls (2 extractions unless already in the DB, 2 agent answers).
-If TELEGRAM_ALLOWED_CHAT_IDS is set, it must include the test chat 555.
+TELEGRAM_ALLOWED_CHAT_IDS must include the test chat 555; REMINDERS_WEBHOOK_KEY must be set (in .env or the shell).
 """
 import json
+import os
 import sys
 import time
 import urllib.request
@@ -19,12 +20,14 @@ from pathlib import Path
 from dotenv import dotenv_values
 
 ROOT = Path(__file__).resolve().parents[1]
-ENV = dotenv_values(ROOT / ".env")
+# shell variables win over .env, as in docker compose (e.g. a REMINDERS_WEBHOOK_KEY set just for this run)
+ENV = {**dotenv_values(ROOT / ".env"), **{k: v for k, v in os.environ.items() if k.startswith(("TELEGRAM_", "REMINDERS_"))}}
 WEBHOOK = "http://localhost:5678/webhook/telegram"
 REMINDERS = "http://localhost:5678/webhook/reminders/run"
 MOCK = "http://localhost:8081/_sent"
 CHAT = {"id": 555, "type": "private"}
 USER = {"id": 777, "is_bot": False, "first_name": "Test", "username": "reviewer_test"}
+BOT = {"id": 123, "is_bot": True, "first_name": "DocFlow", "username": "docflow_bot"}
 
 DS = ROOT / "eval/dataset_test"   # file_id = path relative to the mock's --root
 CLEAN = next(p for p in sorted((DS / "pdf").glob("*invoice*"))).relative_to(DS).as_posix()
@@ -124,7 +127,7 @@ def main():
                                                    for s in sent), "asks for corrections with force_reply")
 
     sent = step("reply with corrections", msg(5, text="total_amount=1234.50\ndocument_number=TEST-1",
-                                              reply_to_message={"message_id": 901, "chat": CHAT,
+                                              reply_to_message={"message_id": 901, "chat": CHAT, "from": BOT,
                                                                 "text": f"✏️ Correcting document #{did}."}), 1)
     text = texts(sent)
     check("corrected" in text and "1234.50" in text, "correction saved and echoed")
@@ -136,6 +139,10 @@ def main():
     check({"answerCallbackQuery", "editMessageReplyMarkup"} <= methods, "callback answered, buttons removed")
     text = texts(sent)
     check("approved" in text and "reviewer_test" in text, "approval confirmed with reviewer name")
+
+    sent = step("file the Bot API can't serve (e.g. > 20 MB)",
+                msg(50, document={"file_id": "missing/file.pdf", "file_name": "big.pdf"}), 1)
+    check(sent and "Could not download the file" in sent[0]["payload"]["text"], "user is told the file wasn't fetched")
 
     # ---- stage 5: Q&A agent, access control, reminders -------------------------------------
     inv = json.loads((DS / "labels" / (Path(CLEAN).stem + ".json")).read_text(encoding="utf-8"))
@@ -149,20 +156,17 @@ def main():
     sent = step("/deadlines -> agent", msg(7, text="/deadlines"), 2)
     check(any(s["method"] == "sendMessage" for s in sent), "deadlines answer sent")
 
-    if ENV.get("TELEGRAM_ALLOWED_CHAT_IDS"):
-        stranger = {"id": 999999, "type": "private"}
-        sent = step("chat not in allowlist", {"message": {"message_id": 8, "date": int(time.time()), "chat": stranger,
-                                                          "from": USER, "text": "Show all documents"}}, 1)
-        check(len(sent) == 1 and "has no access" in sent[0]["payload"]["text"] and "999999" in sent[0]["payload"]["text"],
-              "stranger gets access denied with chat id, no data")
-    else:
-        print("\n# allowlist: TELEGRAM_ALLOWED_CHAT_IDS not set, skipped")
+    stranger = {"id": 999999, "type": "private"}
+    sent = step("chat not in allowlist", {"message": {"message_id": 8, "date": int(time.time()), "chat": stranger,
+                                                      "from": USER, "text": "Show all documents"}}, 1)
+    check(len(sent) == 1 and "has no access" in sent[0]["payload"]["text"] and "999999" in sent[0]["payload"]["text"],
+          "stranger gets access denied with chat id, no data")
 
     print("\n# reminders: run now for a day 3 days before the invoice is due")
     http("DELETE", MOCK)
     from datetime import date, timedelta
     day = (date.fromisoformat(inv["due_date"]) - timedelta(days=3)).isoformat()
-    http("POST", REMINDERS, {"today": day}, {"X-API-Key": ENV["SERVICE_API_KEY"]})
+    http("POST", REMINDERS, {"today": day}, {"X-API-Key": ENV["REMINDERS_WEBHOOK_KEY"]})
     sent = wait_sent(1)
     for s in sent:
         print(f"  -> {s['method']}: {s['payload'].get('text', '')[:200].replace(chr(10), ' | ')}")

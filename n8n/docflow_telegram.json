@@ -39,12 +39,12 @@
           "conditions": [
             {
               "id": "Secret ok?",
-              "leftValue": "={{ $json.headers['x-telegram-bot-api-secret-token'] }}",
+              "leftValue": "={{ !!$env.TELEGRAM_WEBHOOK_SECRET && $json.headers['x-telegram-bot-api-secret-token'] === $env.TELEGRAM_WEBHOOK_SECRET }}",
               "operator": {
-                "type": "string",
-                "operation": "equals"
-              },
-              "rightValue": "={{ $env.TELEGRAM_WEBHOOK_SECRET }}"
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -62,7 +62,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "// Classify a Telegram update into one route for the Switch node.\n// kinds: file | review | fix_prompt | correction | question | help | ignore\nconst body = $input.first().json.body || {};\nconst msg = body.message;\nconst cq = body.callback_query;\nconst out = { kind: 'ignore', update_id: body.update_id };\n\nconst who = (u) => (u && (u.username || [u.first_name, u.last_name].filter(Boolean).join(' ') || String(u.id))) || null;\nconst COMMANDS = {\n  '/deadlines': 'Which payments and document expiry dates fall within the next 30 days? And are there overdue payments from the last 30 days?',\n};\n\nif (cq) {\n  const [action, id] = String(cq.data || '').split(':');\n  Object.assign(out, {\n    chat_id: cq.message.chat.id,\n    message_id: cq.message.message_id,\n    callback_id: cq.id,\n    doc_id: Number(id),\n    action,\n    reviewer: who(cq.from),\n  });\n  if (action === 'fix') out.kind = 'fix_prompt';\n  else if (action === 'approve' || action === 'reject') out.kind = 'review';\n} else if (msg) {\n  Object.assign(out, { chat_id: msg.chat.id, message_id: msg.message_id, reviewer: who(msg.from) });\n  const text = (msg.text || '').trim();\n  const command = text.startsWith('/') ? text.split(/[\\s@]/)[0].toLowerCase() : null;\n  const replied = msg.reply_to_message && msg.reply_to_message.text;\n  const ref = replied && replied.match(/#(\\d+)/);\n  if (msg.document) {\n    Object.assign(out, { kind: 'file', file_id: msg.document.file_id, file_name: msg.document.file_name || null });\n  } else if (msg.photo && msg.photo.length) {\n    // Telegram sends several sizes; the last one is the largest\n    Object.assign(out, { kind: 'file', file_id: msg.photo[msg.photo.length - 1].file_id, file_name: null });\n  } else if (ref && text.includes('=')) {\n    // reply to \"✏️ Correcting document #12\" with lines \"field=value\"\n    const fields = {};\n    for (const line of text.split('\\n')) {\n      const m = line.match(/^\\s*([a-z_]+)\\s*=\\s*(.*?)\\s*$/);\n      if (m) fields[m[1]] = m[2] === '' || m[2].toLowerCase() === 'null' ? null : m[2];\n    }\n    Object.assign(out, { kind: 'correction', doc_id: Number(ref[1]), action: 'correct', fields });\n  } else if (command && COMMANDS[command]) {\n    Object.assign(out, { kind: 'question', question: COMMANDS[command] });\n  } else if (text && !command) {\n    Object.assign(out, { kind: 'question', question: text.slice(0, 1000) });\n  } else {\n    out.kind = 'help';   // /start, /help, stickers, voice, ...\n  }\n}\nreturn [{ json: out }];\n"
+        "jsCode": "// Classify a Telegram update into one route for the Switch node.\n// kinds: file | review | fix_prompt | correction | question | help | ignore\nconst body = $input.first().json.body || {};\nconst msg = body.message;\nconst cq = body.callback_query;\nconst out = { kind: 'ignore', update_id: body.update_id };\n\nconst who = (u) => (u && (u.username || [u.first_name, u.last_name].filter(Boolean).join(' ') || String(u.id))) || null;\nconst COMMANDS = {\n  '/deadlines': 'Which payments and document expiry dates fall within the next 30 days? And are there overdue payments from the last 30 days?',\n};\n\nif (cq) {\n  const [action, id] = String(cq.data || '').split(':');\n  Object.assign(out, {\n    chat_id: cq.message.chat.id,\n    message_id: cq.message.message_id,\n    callback_id: cq.id,\n    doc_id: Number(id),\n    action,\n    reviewer: who(cq.from),\n  });\n  if (action === 'fix') out.kind = 'fix_prompt';\n  else if (action === 'approve' || action === 'reject') out.kind = 'review';\n} else if (msg) {\n  Object.assign(out, { chat_id: msg.chat.id, message_id: msg.message_id, reviewer: who(msg.from) });\n  const text = (msg.text || '').trim();\n  const command = text.startsWith('/') ? text.split(/[\\s@]/)[0].toLowerCase() : null;\n  // corrections only as a reply to the bot's own \"✏️ Correcting document #N\" prompt, not to any message with \"#N\"\n  const rm = msg.reply_to_message;\n  const replied = rm && rm.from && rm.from.is_bot && rm.text;\n  const ref = replied && replied.match(/^✏️ Correcting document #(\\d+)/);\n  if (msg.document) {\n    Object.assign(out, { kind: 'file', file_id: msg.document.file_id, file_name: msg.document.file_name || null });\n  } else if (msg.photo && msg.photo.length) {\n    // Telegram sends several sizes; the last one is the largest\n    Object.assign(out, { kind: 'file', file_id: msg.photo[msg.photo.length - 1].file_id, file_name: null });\n  } else if (ref && text.includes('=')) {\n    // reply to \"✏️ Correcting document #12\" with lines \"field=value\"\n    const fields = {};\n    for (const line of text.split('\\n')) {\n      const m = line.match(/^\\s*([a-z_]+)\\s*=\\s*(.*?)\\s*$/);\n      if (m) fields[m[1]] = m[2] === '' || m[2].toLowerCase() === 'null' ? null : m[2];\n    }\n    Object.assign(out, { kind: 'correction', doc_id: Number(ref[1]), action: 'correct', fields });\n  } else if (command && COMMANDS[command]) {\n    Object.assign(out, { kind: 'question', question: COMMANDS[command] });\n  } else if (text && !command) {\n    Object.assign(out, { kind: 'question', question: text.slice(0, 1000) });\n  } else {\n    out.kind = 'help';   // /start, /help, stickers, voice, ...\n  }\n}\nreturn [{ json: out }];\n"
       }
     },
     {
@@ -85,7 +85,7 @@
           "conditions": [
             {
               "id": "Chat allowed?",
-              "leftValue": "={{ !$env.TELEGRAM_ALLOWED_CHAT_IDS || $env.TELEGRAM_ALLOWED_CHAT_IDS.split(',').map(s => s.trim()).includes(String($json.chat_id)) }}",
+              "leftValue": "={{ ($env.TELEGRAM_ALLOWED_CHAT_IDS || '').split(',').map(s => s.trim()).filter(Boolean).includes(String($json.chat_id)) }}",
               "operator": {
                 "type": "boolean",
                 "operation": "true",
@@ -148,7 +148,8 @@
             }
           ]
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "id": "DocflowTgIntake1-08",
@@ -169,7 +170,8 @@
           }
         },
         "url": "={{ $env.TELEGRAM_API_BASE }}/file/bot{{ $env.TELEGRAM_BOT_TOKEN }}/{{ $json.result.file_path }}"
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "id": "DocflowTgIntake1-09",
@@ -237,6 +239,19 @@
     },
     {
       "id": "DocflowTgIntake1-11",
+      "name": "File error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1780,
+        -150
+      ],
+      "parameters": {
+        "jsCode": "// Shared helpers, prepended to the Code nodes that format Telegram messages.\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nconst TYPE = {\n  invoice: 'Invoice', contract: 'Contract', insurance: 'Insurance policy',\n  receipt: 'Receipt', utility_bill: 'Utility bill', other: 'Other document',\n};\nconst money = (v, cur) => (v == null ? null : `${Number(v).toFixed(2)} ${cur || ''}`.trim());\n\nfunction summary(d) {\n  const f = d.fields || {};\n  const rows = [\n    ['Type', TYPE[f.doc_type] || f.doc_type],\n    ['From', f.counterparty],\n    ['To', f.recipient],\n    ['Number', f.document_number],\n    ['Date', f.issue_date],\n    ['Amount', money(f.total_amount, f.currency)],\n    ['Pay by', f.due_date],\n    ['Valid', f.valid_from || f.valid_until ? `${f.valid_from || '?'} — ${f.valid_until || '?'}` : null],\n  ];\n  return rows.filter(([, v]) => v != null && v !== '').map(([k, v]) => `${k}: <b>${esc(v)}</b>`).join('\\n');\n}\n\nconst send = (chat_id, text, extra = {}) => ({ json: { method: 'sendMessage', payload: { chat_id, text, parse_mode: 'HTML', ...extra } } });\nconst answer = (callback_query_id, text) => ({ json: { method: 'answerCallbackQuery', payload: { callback_query_id, text } } });\nconst reviewKeyboard = (id, canApprove = true) => ({\n  inline_keyboard: [[\n    ...(canApprove ? [{ text: '✅ Approve', callback_data: `approve:${id}` }] : []),\n    { text: '✏️ Correct', callback_data: `fix:${id}` },\n    { text: '🗑 Reject', callback_data: `reject:${id}` },\n  ]],\n});\nconst apiError = (r) => {\n  const detail = r.body && typeof r.body === 'object' ? r.body.detail ?? JSON.stringify(r.body) : r.body;\n  return `${r.statusCode || r.error?.message || 'error'}: ${esc(typeof detail === 'string' ? detail : JSON.stringify(detail))}`;\n};\n\n// getFile / download failed (Telegram bots can only fetch files up to 20 MB, or a network error).\nconst u = $('Parse update').first().json;\nreturn [send(u.chat_id, '❌ Could not download the file from Telegram. Bots can receive files up to 20 MB: '\n  + 'send a smaller PDF or photo.', { reply_to_message_id: u.message_id })];\n"
+      }
+    },
+    {
+      "id": "DocflowTgIntake1-12",
       "name": "POST review",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -266,11 +281,11 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({action: $json.action, fields: $json.fields || {}, reviewer: $json.reviewer}) }}"
+        "jsonBody": "={{ JSON.stringify({action: $json.action, fields: $json.fields || {}, reviewer: $json.reviewer, chat_id: String($json.chat_id)}) }}"
       }
     },
     {
-      "id": "DocflowTgIntake1-12",
+      "id": "DocflowTgIntake1-13",
       "name": "POST correction",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -300,11 +315,11 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({action: $json.action, fields: $json.fields || {}, reviewer: $json.reviewer}) }}"
+        "jsonBody": "={{ JSON.stringify({action: $json.action, fields: $json.fields || {}, reviewer: $json.reviewer, chat_id: String($json.chat_id)}) }}"
       }
     },
     {
-      "id": "DocflowTgIntake1-13",
+      "id": "DocflowTgIntake1-14",
       "name": "Format review",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -317,7 +332,7 @@
       }
     },
     {
-      "id": "DocflowTgIntake1-14",
+      "id": "DocflowTgIntake1-15",
       "name": "Fix prompt",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -330,7 +345,7 @@
       }
     },
     {
-      "id": "DocflowTgIntake1-15",
+      "id": "DocflowTgIntake1-16",
       "name": "Typing",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -343,7 +358,7 @@
       }
     },
     {
-      "id": "DocflowTgIntake1-16",
+      "id": "DocflowTgIntake1-17",
       "name": "POST /ask",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -374,11 +389,11 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({question: $json.question, chat_ref: String($json.chat_id)}) }}"
+        "jsonBody": "={{ JSON.stringify({question: $json.question, chat_ref: String($json.chat_id), chat_id: String($json.chat_id)}) }}"
       }
     },
     {
-      "id": "DocflowTgIntake1-17",
+      "id": "DocflowTgIntake1-18",
       "name": "Format answer",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -391,7 +406,7 @@
       }
     },
     {
-      "id": "DocflowTgIntake1-18",
+      "id": "DocflowTgIntake1-19",
       "name": "Help",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -404,7 +419,7 @@
       }
     },
     {
-      "id": "DocflowTgIntake1-19",
+      "id": "DocflowTgIntake1-20",
       "name": "Telegram API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -540,6 +555,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "File error",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -548,6 +570,13 @@
         [
           {
             "node": "POST /extract",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "File error",
             "type": "main",
             "index": 0
           }
@@ -599,6 +628,17 @@
       ]
     },
     "Format result": {
+      "main": [
+        [
+          {
+            "node": "Telegram API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File error": {
       "main": [
         [
           {
@@ -681,7 +721,8 @@
   "tags": [],
   "settings": {
     "executionOrder": "v1",
-    "saveDataSuccessExecution": "all",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "all",
     "saveManualExecutions": true,
     "timezone": "Europe/Kyiv"
   }

@@ -19,6 +19,7 @@ from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, 
 from fastapi.responses import FileResponse
 from pydantic import ValidationError
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .config import Settings, get_settings
@@ -26,9 +27,12 @@ from .agent import Agent
 from .db import AgentRun, Document, Run, make_sessionmaker
 from .extraction import ExtractionError, Extractor
 from .files import InputError, inspect, store
-from .queries import deadlines as query_deadlines, search_documents
+from .queries import deadlines as query_deadlines, doc_chat, search_documents
 from .schemas import (AskIn, AskOut, Deadline, DocumentOut, ExtractResponse, Fields, ReviewIn, Status,
                       business_checks)
+
+
+HUMAN_REVIEWED = ("approved", "corrected", "rejected")
 
 
 def create_app(settings: Settings | None = None, extractor: Extractor | None = None,
@@ -57,12 +61,17 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
         return app.state.agent
 
     def auth(x_api_key: str | None = Header(default=None)):
-        if settings.api_key and not secrets.compare_digest(x_api_key or "", settings.api_key):
+        if not settings.api_key:
+            if settings.dev_mode:
+                return
+            raise HTTPException(503, "SERVICE_API_KEY is not configured (set DOCFLOW_DEV=1 to run without auth)")
+        if not secrets.compare_digest(x_api_key or "", settings.api_key):
             raise HTTPException(401, "invalid or missing X-API-Key")
 
-    def get_doc(db: Session, doc_id: int) -> Document:
+    def get_doc(db: Session, doc_id: int, chat: str | None = None) -> Document:
+        """`chat` set: the document must have come from that Telegram chat (else 404, nothing is revealed)."""
         doc = db.get(Document, doc_id)
-        if doc is None:
+        if doc is None or (chat is not None and doc_chat(doc) != chat):
             raise HTTPException(404, "document not found")
         return doc
 
@@ -116,7 +125,7 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
                 db: Session = Depends(get_db), extractor: Extractor = Depends(get_extractor)):
         """Upload a PDF or image. Duplicates (same bytes) return the existing record without a new Claude call;
         a duplicate of a failed document is re-processed."""
-        data = file.file.read()
+        data = file.file.read(settings.max_file_mb * 1024 * 1024 + 1)   # never more than the limit + 1 byte
         try:
             info = inspect(data, settings.max_file_mb, settings.max_pages)
         except InputError as e:
@@ -130,7 +139,12 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
                            size_bytes=info.size_bytes, pages=info.pages, has_text_layer=info.has_text_layer,
                            storage_path=str(path), source=source, source_ref=source_ref, status="failed")
             db.add(doc)
-            db.flush()
+            try:
+                db.flush()
+            except IntegrityError:  # the same file is being uploaded concurrently: report the other record
+                db.rollback()
+                doc = db.scalar(select(Document).where(Document.sha256 == info.sha256))
+                return {"duplicate": True, "document": doc}
         run_extraction(db, doc, data, extractor)
         return {"duplicate": False, "document": doc}
 
@@ -153,8 +167,13 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
 
     @app.post("/documents/{doc_id}/review", response_model=DocumentOut, dependencies=[Depends(auth)])
     def review(doc_id: int, body: ReviewIn, db: Session = Depends(get_db)):
-        """Human-in-the-loop decision (Telegram buttons ✅ / ✏️ in stage 4)."""
-        doc = get_doc(db, doc_id)
+        """Human-in-the-loop decision (Telegram buttons ✅ / ✏️ / 🗑).
+
+        Transitions: approve and correct are allowed from any status except `rejected` (a rejected document
+        is final; use /reprocess?force=true to start over); reject is allowed from any status."""
+        doc = get_doc(db, doc_id, body.chat_id)
+        if doc.status == "rejected" and body.action != "reject":
+            raise HTTPException(409, "document was rejected")
         if body.action == "approve":
             if doc.doc_type is None:
                 raise HTTPException(409, "nothing to approve: extraction failed, use action=correct")
@@ -177,9 +196,13 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
         return doc
 
     @app.post("/documents/{doc_id}/reprocess", response_model=DocumentOut, dependencies=[Depends(auth)])
-    def reprocess(doc_id: int, db: Session = Depends(get_db), extractor: Extractor = Depends(get_extractor)):
-        """Run extraction again (after a failure, or with a new prompt / model)."""
+    def reprocess(doc_id: int, force: bool = Query(False, description="Also for documents a person reviewed"),
+                  db: Session = Depends(get_db), extractor: Extractor = Depends(get_extractor)):
+        """Run extraction again (after a failure, or with a new prompt / model). A reviewed document
+        (approved / corrected / rejected) keeps the reviewer's decision unless force=true."""
         doc = get_doc(db, doc_id)
+        if doc.status in HUMAN_REVIEWED and not force:
+            raise HTTPException(409, f"document is {doc.status} by a reviewer; pass force=true to overwrite")
         with open(doc.storage_path, "rb") as fh:
             run_extraction(db, doc, fh.read(), extractor)
         return doc
@@ -202,7 +225,7 @@ def create_app(settings: Settings | None = None, extractor: Extractor | None = N
     @app.post("/ask", response_model=AskOut, dependencies=[Depends(auth)])
     def ask(body: AskIn, db: Session = Depends(get_db), agent: Agent = Depends(get_agent)):
         """Q&A over stored documents: Claude with tools search_documents and list_deadlines."""
-        r = agent.ask(body.question, body.today)
+        r = agent.ask(body.question, body.today, chat=body.chat_id)
         db.add(AgentRun(question=body.question, answer=r.answer, chat_ref=body.chat_ref, model=r.model,
                         served_by=r.served_by, tool_calls=r.tool_calls, turns=r.turns,
                         input_tokens=r.usage["input_tokens"], output_tokens=r.usage["output_tokens"],

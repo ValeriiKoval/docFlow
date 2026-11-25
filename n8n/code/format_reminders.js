@@ -1,5 +1,8 @@
-// GET /deadlines?days_left=7,3,1,0 -> one reminder message per Telegram chat the documents came from.
+// GET /deadlines?days_left=7,3,1,0 -> reminder messages per Telegram chat the documents came from.
 // Documents uploaded by other channels (API, email) have no chat and are skipped here.
+// Telegram rejects messages over 4096 characters, so long lists are split into several messages.
+const LIMIT = 3800;
+const HEADER = '⏰ <b>Deadline reminders</b>';
 const days = (n) => (n === 0 ? 'today' : n === 1 ? 'tomorrow' : `in ${n} days`);
 const byChat = new Map();
 for (const { json: d } of $input.all()) {
@@ -19,6 +22,17 @@ for (const [chat_id, items] of byChat) {
     const unchecked = d.status === 'needs_review' ? ' ⚠️ <i>not reviewed</i>' : '';
     return `${esc(what)} (<b>${days(d.days_left)}</b>)\n    ${who} · #${d.document_id}${unchecked}`;
   });
-  out.push(send(Number(chat_id), `⏰ <b>Deadline reminders</b>\n\n${lines.join('\n\n')}`));
+  let chunk = [];
+  let size = HEADER.length;
+  for (const line of lines) {
+    if (chunk.length && size + line.length + 2 > LIMIT) {
+      out.push(send(Number(chat_id), `${HEADER}\n\n${chunk.join('\n\n')}`));
+      chunk = [];
+      size = HEADER.length;
+    }
+    chunk.push(line);
+    size += line.length + 2;
+  }
+  if (chunk.length) out.push(send(Number(chat_id), `${HEADER}\n\n${chunk.join('\n\n')}`));
 }
 return out;

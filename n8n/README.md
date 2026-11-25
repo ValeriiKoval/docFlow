@@ -2,7 +2,7 @@
 
 Two importable workflows, built from [code/](code/) by [build_workflow.py](build_workflow.py):
 
-**[docflow_telegram.json](docflow_telegram.json): DocFlow: Telegram intake, review and Q&A** (19 nodes)
+**[docflow_telegram.json](docflow_telegram.json): DocFlow: Telegram intake, review and Q&A** (20 nodes)
 
 ```
 Telegram ─► Webhook /webhook/telegram ─► Secret ok? ─► Parse update ─► Chat allowed? ─┬─► Route
@@ -40,9 +40,12 @@ Webhook /webhook/reminders/run ─► X-API-Key ok? ────┴─► GET /d
 
 - **Webhook node + Bot API over HTTP**, instead of n8n's Telegram nodes. All settings come from environment variables, so the workflows import and run with no credentials set up in the UI. They are also testable against a mock Bot API (`TELEGRAM_API_BASE`).
 - **Security:**
-  - Telegram sends the `X-Telegram-Bot-Api-Secret-Token` header; calls without the right value are dropped at the second node;
-  - only chats on the allowlist are served;
-  - the manual reminders webhook requires the service API key.
+  - Telegram sends the `X-Telegram-Bot-Api-Secret-Token` header; calls without the right value are dropped at the second node. An empty `TELEGRAM_WEBHOOK_SECRET` never matches;
+  - only chats on the allowlist are served; an empty allowlist serves nobody;
+  - each chat sees, reviews and asks about only the documents sent from it (`chat_id` is passed to the service, which enforces it). Corrections are accepted only as a reply to the bot's own ✏️ prompt;
+  - the manual reminders webhook requires its own `REMINDERS_WEBHOOK_KEY` (not the service key); empty = disabled;
+  - ports 8000 and 5678 are bound to `127.0.0.1`. The tunnel goes through an nginx edge ([edge.nginx.conf](edge.nginx.conf)) that lets through only `POST /webhook/telegram`, so the n8n UI is never public;
+  - successful executions are not stored (they carry files and personal data); error executions are pruned after 7 days.
 - **No business logic in n8n:** validation, dedup, storage, the review state machine, deadline queries and the agent live in the service. n8n only routes events, schedules jobs and formats messages.
 - **Workflows as code:** Code-node sources are plain JavaScript in [code/](code/), and [build_workflow.py](build_workflow.py) assembles the JSON from them. The shared helpers in `common.js` are prepended to the nodes that format messages. Edit the `.js` files, never `jsCode` in the JSON:
   ```
@@ -65,14 +68,14 @@ Webhook /webhook/reminders/run ─► X-API-Key ok? ────┴─► GET /d
 ### With a real bot
 
 1. Create a bot with @BotFather and put the token in `.env` as `TELEGRAM_BOT_TOKEN`.
-   - `TELEGRAM_WEBHOOK_SECRET` and `SERVICE_API_KEY` are random strings (`A-Z a-z 0-9 _ -`).
+   - `TELEGRAM_WEBHOOK_SECRET`, `SERVICE_API_KEY` and `REMINDERS_WEBHOOK_KEY` are random strings (`A-Z a-z 0-9 _ -`).
    - `TELEGRAM_ALLOWED_CHAT_IDS` is your chat id. If you don't know it, the bot tells you when access is denied.
 2. Telegram needs a public HTTPS URL. Locally, start a Cloudflare quick tunnel (no account needed), then register the webhook:
    ```
    docker compose --profile tunnel up -d
    python n8n/set_webhook.py          # finds the tunnel URL in the logs, calls setWebhook
    ```
-   The quick-tunnel URL changes every time the tunnel restarts; run `set_webhook.py` again after that. On a server, use `python n8n/set_webhook.py --url https://your-n8n-host` instead.
+   The quick-tunnel URL changes every time the tunnel restarts; run `set_webhook.py` again after that. On a server, use `python n8n/set_webhook.py --url https://your-n8n-host` instead, and publish only `/webhook/telegram` there too (see [edge.nginx.conf](edge.nginx.conf)).
 3. Send the bot a PDF or a photo of a document, or ask it a question.
 
 `python n8n/set_webhook.py --info` shows the webhook status and the last delivery error.
@@ -80,7 +83,7 @@ Webhook /webhook/reminders/run ─► X-API-Key ok? ────┴─► GET /d
 To send reminders now, as of a given day (for demos):
 
 ```
-curl -X POST localhost:5678/webhook/reminders/run -H "X-API-Key: $SERVICE_API_KEY" -H "Content-Type: application/json" -d '{"today": "2026-04-01"}'
+curl -X POST localhost:5678/webhook/reminders/run -H "X-API-Key: $REMINDERS_WEBHOOK_KEY" -H "Content-Type: application/json" -d '{"today": "2026-04-01"}'
 ```
 
 ### Offline test (no bot, no tunnel)

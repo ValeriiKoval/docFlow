@@ -14,6 +14,12 @@ WITH_VALIDITY = {"insurance", "contract"}
 WITH_TOTAL = {"invoice", "utility_bill", "receipt"}
 KNOWN_CURRENCIES = {"UAH", "PLN", "EUR", "USD", "GBP", "CHF", "CZK"}
 
+# "№ 15/2025", "nr FV/1", "No. 7", "#12" -> label; "NOV/2026/1", "Nordic-15" are numbers, not labels
+NUMBER_LABEL = re.compile(r"^(?:№|#|(?:nr|no)(?![^\W\d_]))\.?\s*:?\s*", re.I)
+# Telegram chat id: limits a request to the documents sent from that chat (see queries.chat_scope)
+ChatId = Field(None, pattern=r"^-?\d{1,20}$",
+               description="Telegram chat id. When set, only documents sent from this chat are visible.")
+
 
 class Fields(BaseModel):
     """Extracted document fields after normalisation (the schema.json keys minus confidence)."""
@@ -42,8 +48,7 @@ class Fields(BaseModel):
     @field_validator("document_number", mode="after")
     @classmethod
     def _strip_number_label(cls, v):
-        # "№ 15/2025", "nr FV/1", "No. 7" -> bare number
-        return re.sub(r"^(№|nr\.?|no\.?|#)\s*", "", v, flags=re.I) if v else v
+        return (NUMBER_LABEL.sub("", v).strip() or None) if v else v
 
     @field_validator("currency", mode="before")
     @classmethod
@@ -60,9 +65,17 @@ class Fields(BaseModel):
     def _amount(cls, v):
         if v is None or v == "":
             return None
-        if isinstance(v, str):  # tolerate "1 234,56" from manual corrections
-            s = v.replace(" ", "").replace(" ", "")
-            s = s.replace(",", ".") if s.count(",") == 1 and "." not in s else s.replace(",", "")
+        if isinstance(v, str):  # tolerate "1 234,56", "1.234,56", "1,234.56" from manual corrections
+            s = re.sub(r"[\s  ']", "", v)
+            if "," in s and "." in s:   # the separator that comes last is the decimal one
+                dec, thousands = (",", ".") if s.rfind(",") > s.rfind(".") else (".", ",")
+                s = s.replace(thousands, "").replace(dec, ".")
+            elif s.count(",") == 1:     # "15,5": decimal comma (uk / pl)
+                s = s.replace(",", ".")
+            elif s.count(",") > 1:      # "1,234,567"
+                s = s.replace(",", "")
+            elif s.count(".") > 1:      # "1.234.567"
+                s = s.replace(".", "")
             v = float(s)
         return round(float(v), 2)
 
@@ -123,7 +136,8 @@ class ExtractResponse(BaseModel):
 class ReviewIn(BaseModel):
     action: Literal["approve", "correct", "reject"]
     fields: dict = Field(default_factory=dict, description="Partial field corrections (action=correct)")
-    reviewer: str | None = None
+    reviewer: str | None = Field(None, max_length=100)
+    chat_id: str | None = ChatId
 
 
 class Deadline(BaseModel):
@@ -143,7 +157,8 @@ class Deadline(BaseModel):
 
 class AskIn(BaseModel):
     question: str = Field(min_length=1, max_length=1000)
-    chat_ref: str | None = Field(None, description="Where the question came from, e.g. telegram chat id")
+    chat_ref: str | None = Field(None, max_length=255, description="Where the question came from (logged only)")
+    chat_id: str | None = ChatId
     today: date | None = Field(None, description="Defaults to the server date; set for demos and evals")
 
 

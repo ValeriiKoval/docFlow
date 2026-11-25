@@ -26,8 +26,10 @@ if (cq) {
   Object.assign(out, { chat_id: msg.chat.id, message_id: msg.message_id, reviewer: who(msg.from) });
   const text = (msg.text || '').trim();
   const command = text.startsWith('/') ? text.split(/[\s@]/)[0].toLowerCase() : null;
-  const replied = msg.reply_to_message && msg.reply_to_message.text;
-  const ref = replied && replied.match(/#(\d+)/);
+  // corrections only as a reply to the bot's own "✏️ Correcting document #N" prompt, not to any message with "#N"
+  const rm = msg.reply_to_message;
+  const replied = rm && rm.from && rm.from.is_bot && rm.text;
+  const ref = replied && replied.match(/^✏️ Correcting document #(\d+)/);
   if (msg.document) {
     Object.assign(out, { kind: 'file', file_id: msg.document.file_id, file_name: msg.document.file_name || null });
   } else if (msg.photo && msg.photo.length) {

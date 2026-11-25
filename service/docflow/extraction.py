@@ -23,6 +23,30 @@ from pathlib import Path
 TOOL_NAME = "record_document"
 FALLBACK_BETA = "server-side-fallback-2026-07-01"
 IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+# The API takes base64 images up to 5 MB (base64 adds 1/3) and 8000 px per side; stay below both.
+MAX_IMAGE_BYTES = int(3.6 * 1024 * 1024)
+MAX_IMAGE_SIDE = 4096
+
+
+def fit_image(data: bytes, media_type: str) -> tuple[bytes, str]:
+    """Re-encode an image that is over the API limits as a smaller JPEG; other inputs pass unchanged."""
+    if media_type not in IMAGE_TYPES:
+        return data, media_type
+    from io import BytesIO
+    from PIL import Image, ImageOps
+    with Image.open(BytesIO(data)) as im:
+        if len(data) <= MAX_IMAGE_BYTES and max(im.size) <= MAX_IMAGE_SIDE:
+            return data, media_type
+        im = ImageOps.exif_transpose(im).convert("RGB")
+        im.thumbnail((MAX_IMAGE_SIDE, MAX_IMAGE_SIDE))
+        for quality in (90, 80, 70, 60):
+            buf = BytesIO()
+            im.save(buf, "JPEG", quality=quality, optimize=True)
+            if buf.tell() <= MAX_IMAGE_BYTES:
+                break
+            if quality == 70:   # still too big: halve the resolution once more
+                im.thumbnail((im.width // 2, im.height // 2))
+    return buf.getvalue(), "image/jpeg"
 
 # USD per 1M tokens (input, output). Check against the pricing page before quoting.
 PRICES = {"claude-sonnet-5-5": (2.0, 10.0), "claude-haiku-5-5": (0.10, 0.50), "claude-opus-5-5": (4.0, 20.0)}
@@ -108,11 +132,12 @@ class Extractor:
         jsonschema.validate(fields, self.schema)
 
     def extract(self, data: bytes, media_type: str) -> ExtractionResult:
+        data, media_type = fit_image(data, media_type)
+        messages = [{"role": "user", "content": [
+            self._content_block(data, media_type),
+            {"type": "text", "text": f"Extract the fields from this document and call {TOOL_NAME}."}]}]
         kwargs = dict(model=self.model, max_tokens=16000, system=self.system, tools=[self.tool],
-                      tool_choice={"type": "auto"},
-                      messages=[{"role": "user", "content": [
-                          self._content_block(data, media_type),
-                          {"type": "text", "text": f"Extract the fields from this document and call {TOOL_NAME}."}]}])
+                      tool_choice={"type": "auto"}, messages=messages)
         if self.effort:
             kwargs["output_config"] = {"effort": self.effort}
         use_fallback = not self.model.startswith("claude-haiku")  # Haiku has no server-side fallback
@@ -130,13 +155,23 @@ class Extractor:
             block = next((b for b in r.content if b.type == "tool_use" and b.name == TOOL_NAME), None)
             if block is None:
                 last_err = f"no {TOOL_NAME} call (stop_reason={r.stop_reason})"
+                if r.stop_reason == "max_tokens":   # a re-ask would hit the same limit
+                    break
+                # tell the model what went wrong instead of re-sending the identical request
+                messages.append({"role": "assistant", "content": r.content})
+                messages.append({"role": "user", "content": f"You did not call {TOOL_NAME}. Call it now."})
                 continue
             try:
                 self.validate(block.input)
-            except Exception as e:  # jsonschema.ValidationError
-                last_err = f"schema: {str(e).splitlines()[0]}"
+            except Exception as e:  # jsonschema.ValidationError: name the field so the model can fix it
+                where = "/".join(map(str, getattr(e, "absolute_path", []))) or "(root)"
+                last_err = f"schema: {where}: {getattr(e, 'message', None) or str(e).splitlines()[0]}"
+                messages.append({"role": "assistant", "content": r.content})
+                messages.append({"role": "user", "content": [{
+                    "type": "tool_result", "tool_use_id": block.id, "is_error": True,
+                    "content": f"Invalid {TOOL_NAME} input: {last_err}. Fix it and call {TOOL_NAME} again."}]})
                 continue
             return ExtractionResult(fields=dict(block.input), model=self.model, prompt_version=self.prompt_version,
                                     usage=usage, latency_s=time.time() - t0, attempts=attempt,
                                     stop_reason=r.stop_reason, served_by=r.model)
-        raise ExtractionError(f"{last_err} after {self.max_attempts} attempts", usage, self.max_attempts)
+        raise ExtractionError(f"{last_err} after {attempt} attempts", usage, attempt)

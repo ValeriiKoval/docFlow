@@ -27,7 +27,9 @@ Interactive docs: http://localhost:8000/docs. Tests: `python -m pytest -q` from 
 
 ## Endpoints
 
-When `SERVICE_API_KEY` is set, every endpoint except `/health` requires the header `X-API-Key`.
+Every endpoint except `/health` requires the header `X-API-Key` (= `SERVICE_API_KEY`). Without `SERVICE_API_KEY` they answer 503; `DOCFLOW_DEV=1` allows running without a key for local experiments.
+
+Optional `chat_id` (Telegram chat id) in `/ask` and `/documents/{id}/review` limits the request to documents sent from that chat; n8n always passes it. `/reprocess` refuses documents a person has reviewed (approved / corrected / rejected) unless `force=true`; a rejected document can't be approved or corrected.
 
 | Method | Path | Purpose |
 |---|---|---|

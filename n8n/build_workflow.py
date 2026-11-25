@@ -17,6 +17,7 @@ other than Code nodes (wiring, HTTP parameters) go into this file by hand. The p
    Webhook /webhook/telegram ─► Secret ok? ─► Parse update ─► Chat allowed? ─┬► Route(kind)
                                                                             └► Access denied
      file        ─► getFile ─► download ─► POST /extract ─► Format result ─────────┐
+                    (getFile / download error ─► File error) ──────────────────────┤
      review      ─► POST /documents/{id}/review (approve|reject) ─► Format review ─┤
      fix_prompt  ─► Fix prompt (force_reply) ──────────────────────────────────────┤
      correction  ─► POST /documents/{id}/review (correct) ─► Format review ────────┤
@@ -25,7 +26,7 @@ other than Code nodes (wiring, HTTP parameters) go into this file by hand. The p
 
 2. DocFlow: deadline reminders
    Every day 09:00 ─┐
-   Webhook /webhook/reminders/run (X-API-Key) ─► Key ok? ─┴─► GET /deadlines?days_left=7,3,1,0
+   Webhook /webhook/reminders/run (REMINDERS_WEBHOOK_KEY) ─► Key ok? ─┴─► GET /deadlines?days_left=7,3,1,0
      ─► Format reminders (one message per chat) ─► Telegram API
 """
 import argparse
@@ -59,8 +60,8 @@ class Workflow:
         self.sources[name] = (file, common)
         return self.node(name, "n8n-nodes-base.code", 2, {"jsCode": (COMMON + "\n" + src) if common else src}, pos)
 
-    def http(self, name, pos, **params):
-        return self.node(name, "n8n-nodes-base.httpRequest", 4.2, {"options": {}, **params}, pos)
+    def http(self, name, pos, node_extra=None, **params):
+        return self.node(name, "n8n-nodes-base.httpRequest", 4.2, {"options": {}, **params}, pos, **(node_extra or {}))
 
     def if_(self, name, left, right_or_expr, pos, operation="equals"):
         cond = {"id": name, "leftValue": left, "operator": {"type": "string", "operation": operation}}
@@ -83,8 +84,9 @@ class Workflow:
     def render(self):
         wf = {"id": self.wid, "name": self.name, "nodes": self.nodes, "connections": self.connections,
               "active": False, "pinData": {}, "tags": [],
-              "settings": {"executionOrder": "v1", "saveDataSuccessExecution": "all", "saveManualExecutions": True,
-                           "timezone": "Europe/Kyiv"}}
+              # successful runs are not stored: they carry document files and extracted personal data
+              "settings": {"executionOrder": "v1", "saveDataSuccessExecution": "none", "saveDataErrorExecution": "all",
+                           "saveManualExecutions": True, "timezone": "Europe/Kyiv"}}
         return json.dumps(wf, ensure_ascii=False, indent=2) + "\n"
 
 
@@ -96,21 +98,25 @@ def build():
     webhook = w.node("Telegram webhook", "n8n-nodes-base.webhook", 2,
                      {"httpMethod": "POST", "path": "telegram", "responseMode": "onReceived", "options": {}},
                      [0, 300], webhookId="7d1c2b3a-d0cf-4f10-9a11-7e1e6a000001")
-    secret = w.if_("Secret ok?", "={{ $json.headers['x-telegram-bot-api-secret-token'] }}",
-                   "={{ $env.TELEGRAM_WEBHOOK_SECRET }}", [220, 300])
+    # an empty secret never matches: the workflow fails closed if TELEGRAM_WEBHOOK_SECRET is missing
+    secret = w.if_("Secret ok?", "={{ !!$env.TELEGRAM_WEBHOOK_SECRET && $json.headers['x-telegram-bot-api-secret-token']"
+                   " === $env.TELEGRAM_WEBHOOK_SECRET }}", None, [220, 300], operation="true")
     parse = w.code("Parse update", "parse_update.js", [440, 300], common=False)
+    # empty allowlist = nobody (fail closed)
     allowed = w.if_("Chat allowed?",
-                    "={{ !$env.TELEGRAM_ALLOWED_CHAT_IDS || $env.TELEGRAM_ALLOWED_CHAT_IDS.split(',')"
-                    ".map(s => s.trim()).includes(String($json.chat_id)) }}", None, [660, 300], operation="true")
+                    "={{ ($env.TELEGRAM_ALLOWED_CHAT_IDS || '').split(',').map(s => s.trim()).filter(Boolean)"
+                    ".includes(String($json.chat_id)) }}", None, [660, 300], operation="true")
     denied = w.code("Access denied", "access_denied.js", [1560, 800])
     route = w.node("Route", "n8n-nodes-base.switch", 3.2, {
         "mode": "expression", "numberOutputs": len(ROUTES),
         "output": "={{ " + json.dumps({k: i for i, k in enumerate(ROUTES)}) + "[$json.kind] ?? " + str(len(ROUTES) - 1) + " }}",
         "options": {}}, [880, 300])
 
-    get_file = w.http("Telegram getFile", [1120, 0], url=TG + "/getFile", sendQuery=True,
+    # errors (file > 20 MB for the Bot API, network) go to the second output -> "File error" reply
+    on_error = {"onError": "continueErrorOutput"}
+    get_file = w.http("Telegram getFile", [1120, 0], node_extra=on_error, url=TG + "/getFile", sendQuery=True,
                       queryParameters={"parameters": [{"name": "file_id", "value": "={{ $json.file_id }}"}]})
-    download = w.http("Download file", [1340, 0],
+    download = w.http("Download file", [1340, 0], node_extra=on_error,
                       url="={{ $env.TELEGRAM_API_BASE }}/file/bot{{ $env.TELEGRAM_BOT_TOKEN }}/{{ $json.result.file_path }}",
                       options={"response": {"response": {"responseFormat": "file", "outputPropertyName": "data"}}})
     extract = w.http("POST /extract", [1560, 0], method="POST", url=API + "/extract",
@@ -122,8 +128,11 @@ def build():
                           "value": "={{ $('Parse update').first().json.chat_id }}:{{ $('Parse update').first().json.message_id }}"}]},
                      options={"timeout": 180000, **FULL_NEVER_ERROR})
     fmt_result = w.code("Format result", "format_result.js", [1780, 0])
+    file_error = w.code("File error", "file_error.js", [1780, -150])
 
-    review_body = "={{ JSON.stringify({action: $json.action, fields: $json.fields || {}, reviewer: $json.reviewer}) }}"
+    # chat_id: the service only lets a chat review documents that were sent from that chat
+    review_body = ("={{ JSON.stringify({action: $json.action, fields: $json.fields || {}, reviewer: $json.reviewer, "
+                   "chat_id: String($json.chat_id)}) }}")
     review = w.http("POST review", [1120, 200], method="POST", url=API + "/documents/{{ $json.doc_id }}/review",
                     sendHeaders=True, headerParameters=KEY_HEADER, sendBody=True, specifyBody="json",
                     jsonBody=review_body, options=FULL_NEVER_ERROR)
@@ -136,7 +145,8 @@ def build():
     typing = w.code("Typing", "typing.js", [1120, 550], common=False)
     ask = w.http("POST /ask", [1340, 650], method="POST", url=API + "/ask", sendHeaders=True,
                  headerParameters=KEY_HEADER, sendBody=True, specifyBody="json",
-                 jsonBody="={{ JSON.stringify({question: $json.question, chat_ref: String($json.chat_id)}) }}",
+                 jsonBody="={{ JSON.stringify({question: $json.question, chat_ref: String($json.chat_id), "
+                          "chat_id: String($json.chat_id)}) }}",
                  options={"timeout": 120000, **FULL_NEVER_ERROR})
     fmt_answer = w.code("Format answer", "format_answer.js", [1780, 650], common=False)
     help_ = w.code("Help", "help.js", [1780, 750])
@@ -153,14 +163,15 @@ def build():
                          ("question", typing), ("question", ask), ("help", help_)]:
         w.link(route, target, ROUTES.index(name))
     w.link(get_file, download)
+    w.link(get_file, file_error, 1)
     w.link(download, extract)
+    w.link(download, file_error, 1)
     w.link(extract, fmt_result)
     w.link(review, fmt_review)
     w.link(correct, fmt_review)
     w.link(ask, fmt_answer)
-    for n in (fmt_result, fmt_review, fix, typing, fmt_answer, help_, denied):
+    for n in (fmt_result, file_error, fmt_review, fix, typing, fmt_answer, help_, denied):
         w.link(n, telegram)
-    
 
     # ---- 2. Daily deadline reminders ---------------------------------------------------
     r = Workflow("docflow_reminders.json", "DocflowReminder1", "DocFlow: deadline reminders")
@@ -169,7 +180,10 @@ def build():
     manual = r.node("Run now (webhook)", "n8n-nodes-base.webhook", 2,
                     {"httpMethod": "POST", "path": "reminders/run", "responseMode": "onReceived", "options": {}},
                     [0, 420], webhookId="7d1c2b3a-d0cf-4f10-9a11-7e1e6a000002")
-    key_ok = r.if_("Key ok?", "={{ $json.headers['x-api-key'] }}", "={{ $env.SERVICE_API_KEY }}", [220, 420])
+    # own key, not SERVICE_API_KEY: whoever may trigger reminders must not get full API access.
+    # Empty REMINDERS_WEBHOOK_KEY disables the manual webhook.
+    key_ok = r.if_("Key ok?", "={{ !!$env.REMINDERS_WEBHOOK_KEY && $json.headers['x-api-key'] === "
+                   "$env.REMINDERS_WEBHOOK_KEY }}", None, [220, 420], operation="true")
     fetch = r.http("GET /deadlines", [460, 300], url=API + "/deadlines", sendHeaders=True, headerParameters=KEY_HEADER,
                    sendQuery=True, queryParameters={"parameters": [
                        {"name": "within_days", "value": "7"},

@@ -27,7 +27,10 @@ class Settings:
     storage_dir: Path = field(default_factory=lambda: Path(os.getenv("STORAGE_DIR", str(REPO / "data" / "files"))))
     prompts_dir: Path = field(default_factory=lambda: Path(os.getenv("PROMPTS_DIR", str(REPO / "prompts"))))
     schema_path: Path = field(default_factory=lambda: Path(os.getenv("SCHEMA_PATH", str(REPO / "schema.json"))))
-    api_key: str = _env("SERVICE_API_KEY", "")  # empty = no auth (local dev only)
+    api_key: str = _env("SERVICE_API_KEY", "")  # required unless dev_mode
+    # DOCFLOW_DEV=1: allow running without SERVICE_API_KEY (local experiments only). Without it, an empty
+    # key makes every protected endpoint answer 503 instead of silently serving unauthenticated requests.
+    dev_mode: bool = field(default_factory=lambda: os.getenv("DOCFLOW_DEV", "").lower() in ("1", "true", "yes"))
     max_file_mb: int = field(default_factory=lambda: int(os.getenv("MAX_FILE_MB", "20")))
     max_pages: int = field(default_factory=lambda: int(os.getenv("MAX_PAGES", "20")))
     # Haiku: 12/13 on the QA eval (Sonnet 13/13) at ~1/15 of the cost: eval/RESULTS.md
